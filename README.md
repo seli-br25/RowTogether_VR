@@ -1,4 +1,4 @@
-# VRUE
+# ROW TOGETHER - Group 2
 Names: 
 - Selina Breuer
 	- Matrklnr: 12019862 
