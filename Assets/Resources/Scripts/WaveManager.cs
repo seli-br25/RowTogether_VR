@@ -28,8 +28,18 @@ public class WaveManager : MonoBehaviour
         offset += Time.deltaTime * speed; 
     }
 
-    public float GetWaveHeight(float x)
+    public float GetWaveHeight(Vector3 worldPos)
     {
-        return amplitude * Mathf.Sin(x / lenth + offset);
+        Vector3 localPos = transform.InverseTransformPoint(worldPos);
+        float adjustedX = localPos.x / transform.localScale.x;
+        return amplitude * Mathf.Sin(adjustedX / lenth + offset);
     }
+
+    public float GetWaveHeightForBoat(Vector3 worldPos)
+    {
+        return GetWaveHeight(worldPos) * transform.localScale.y;
+    }
+
+
+
 }
