@@ -1,8 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
+using ExitGames.Client.Photon;
+using System;
 
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
@@ -36,8 +36,20 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        Debug.Log("Joined a Room");
         base.OnJoinedRoom();
+        if (PhotonNetwork.IsMasterClient)
+        {
+            
+            Hashtable properties = new Hashtable()
+            {
+                { "LeftFree", 0},
+                { "RightFree", 0}
+            };
+            PhotonNetwork.CurrentRoom.SetCustomProperties(properties);
+
+        }
+        Debug.Log("Joined a Room");
+
     }
 
     public override void OnJoinRoomFailed(short returnCode, string message)

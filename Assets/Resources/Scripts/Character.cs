@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR;
 using Photon.Pun;
@@ -7,6 +5,7 @@ using UnityEngine.XR.Interaction.Toolkit;
 using Unity.XR.CoreUtils;
 using TMPro;
 using UnityEngine.UI;
+using ExitGames.Client.Photon;
 
 public class Character : MonoBehaviour
 {
@@ -15,6 +14,7 @@ public class Character : MonoBehaviour
     public Transform rightHand;
     private PhotonView photonView;
 
+    private Transform xrRig;
     private Transform headRig;
     private Transform leftHandRig;
     private Transform rightHandRig;
@@ -30,9 +30,12 @@ public class Character : MonoBehaviour
     {
         photonView = GetComponent<PhotonView>();
         XROrigin rig = FindObjectOfType<XROrigin>();
+        xrRig = rig.transform;
         headRig = rig.transform.Find("Camera Offset/Main Camera");
         leftHandRig = rig.transform.Find("Camera Offset/Left Controller");
         rightHandRig = rig.transform.Find("Camera Offset/Right Controller");
+
+        return;
 
         GameObject restartButtonObject = GameObject.Find("RestartButton");
         GameObject canvas = GameObject.Find("Canvas");
@@ -63,28 +66,22 @@ public class Character : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
+    {   
+        // need to hide own network player, as we already have XROrigin (Character.cs) 
+        // also disable the gameobjects for ghost photonviews whose id is a ghost
         if (photonView.IsMine)
         {
+            // We don't want to disable the root photon player game object.
+            //this.gameObject.SetActive(false);
             rightHand.gameObject.SetActive(false);
             leftHand.gameObject.SetActive(false);
             head.gameObject.SetActive(false);
 
+            MapPosition(this.transform, xrRig);
             MapPosition(head, headRig);
             MapPosition(leftHand, leftHandRig);
             MapPosition(rightHand, rightHandRig);
         }
-
-        //GameObject canvas = GameObject.Find("Canvas");
-        //if (canvas != null)
-        //{
-        //    placementText = canvas.GetComponentInChildren<TextMeshProUGUI>();
-        //}
-        //else
-        //{
-        //    Debug.LogError("Canvas with TextMeshProUGUI not found!");
-        //}
-
     }
 
     void MapPosition(Transform target, Transform rigTransform)
@@ -93,14 +90,7 @@ public class Character : MonoBehaviour
         target.rotation = rigTransform.rotation;
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Goal") && !hasFinished)
-        {
-            hasFinished = true; 
-            photonView.RPC("HandleFinish", RpcTarget.AllBuffered, PhotonNetwork.NickName);
-        }
-    }
+
 
     [PunRPC]
     private void HandleFinish(string playerName)

@@ -11,9 +11,12 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/Playground.unity
     guid: 56bd149d20a8b49468cb263955c77e55
-  - enabled: 1
-    path: Assets/Scenes/Playground_updated track.unity
+  - enabled: 0
+    path: Assets/Scenes/Exercise3.unity
     guid: ef048b485fb99e84b9e5ad6e81e899fc
+  - enabled: 1
+    path: Assets/Scenes/Photon Scene.unity
+    guid: cad6fcb11eee6e2459dedaf701b7d4e0
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: aad2cd20c354315499ac832ff0dc0752, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: c10b708bc289a7a4c85884288e317b24, type: 2}
