@@ -39,34 +39,6 @@ public class Character : MonoBehaviour
         headRig = rig.transform.Find("Camera Offset/Main Camera");
         leftHandRig = rig.transform.Find("Camera Offset/Left Controller");
         rightHandRig = rig.transform.Find("Camera Offset/Right Controller");
-
-        return;
-
-        GameObject restartButtonObject = GameObject.Find("RestartButton");
-        GameObject canvas = GameObject.Find("Canvas");
-        if (canvas != null)
-        {
-            placementText = canvas.GetComponentInChildren<TextMeshProUGUI>();
-        }
-        else
-        {
-            Debug.LogError("Canvas with TextMeshProUGUI not found!");
-        }
-
-        if (restartButtonObject != null)
-        {
-            restartButton = restartButtonObject.GetComponent<Button>();
-            if (restartButton != null)
-            {
-                restartButton.gameObject.SetActive(false);
-                restartButton.onClick.AddListener(OnRestartButtonClicked);
-            }
-        }
-        else
-        {
-            Debug.LogError("RestartButton not found in the scene!");
-        }
-
     }
 
 
@@ -97,8 +69,19 @@ public class Character : MonoBehaviour
     {   
         // need to hide own network player, as we already have XROrigin (Character.cs) 
         // also disable the gameobjects for ghost photonviews whose id is a ghost
+        if (xrRig == null)
+        {
+            //Debug.Log("XR Rig null");
+            return;
+        }
+        if (cameraOffset == null)
+        {
+            Debug.Log("offset null");
+            return;
+        }
         if (photonView.IsMine)
         {
+            //Debug.Log($" is my view {photonView.IsMine}, ${GetComponent<PhotonView>().ViewID}");
             // We don't want to disable the root photon player game object.
             //this.gameObject.SetActive(false);
             cameraOffset.gameObject.SetActive(false);

@@ -21,6 +21,7 @@ public class NetworkPlayerSpawner : MonoBehaviourPunCallbacks
     [SerializeField]
     private GameObject XROrigin;
 
+    private int previousMasterClientActorNr;
 
     // executed by every client in room
     public override void OnPlayerEnteredRoom(Player newPlayer)
@@ -84,7 +85,7 @@ public class NetworkPlayerSpawner : MonoBehaviourPunCallbacks
             XROrigin.transform.SetParent(spawnedShip.transform.Find("Seats/Left Seat").transform);
             XROrigin.transform.localPosition = Vector3.zero;
             spawnedPlayer.GetPhotonView().RPC("SeatedAsChild", RpcTarget.All, 0, spawnedShip.GetPhotonView().ViewID, spawnedPlayer.GetPhotonView().ViewID);
-            spawnedShip.GetPhotonView().RPC("UpdateSeatAvailability", RpcTarget.MasterClient, 0, spawnedPlayer.GetPhotonView().ViewID);
+            spawnedShip.GetPhotonView().RPC("UpdateSeatAvailability", RpcTarget.MasterClient, 0, spawnedPlayer.GetPhotonView().ViewID, PhotonNetwork.LocalPlayer.ActorNumber);
             return;
         }
 
@@ -102,7 +103,7 @@ public class NetworkPlayerSpawner : MonoBehaviourPunCallbacks
             XROrigin.transform.SetParent(spawnedShip.transform.Find("Seats/Right Seat").transform);
             XROrigin.transform.localPosition = Vector3.zero;
             spawnedPlayer.GetPhotonView().RPC("SeatedAsChild", RpcTarget.All, 1, spawnedShip.GetPhotonView().ViewID , spawnedPlayer.GetPhotonView().ViewID);
-            spawnedShip.GetPhotonView().RPC("UpdateSeatAvailability", RpcTarget.MasterClient, 1, spawnedPlayer.GetPhotonView().ViewID);
+            spawnedShip.GetPhotonView().RPC("UpdateSeatAvailability", RpcTarget.MasterClient, 1, spawnedPlayer.GetPhotonView().ViewID, PhotonNetwork.LocalPlayer.ActorNumber);
             return;
         }
         else if (rightSeat > 0)
@@ -115,11 +116,14 @@ public class NetworkPlayerSpawner : MonoBehaviourPunCallbacks
         // spawn ghost observers
         if (leftSeat != 0 && rightSeat != 0)
         {
-            XROrigin.transform.SetParent(spawnedShip.transform.Find("Ghost Seat").transform);
+            XROrigin.transform.SetParent(spawnedShip.transform.Find("Seats/Ghost Seat").transform);
             XROrigin.transform.localPosition = Vector3.zero;
+            spawnedPlayer.GetPhotonView().RPC("SeatedAsChild", RpcTarget.All, 2, spawnedShip.GetPhotonView().ViewID, spawnedPlayer.GetPhotonView().ViewID);
+            spawnedShip.GetPhotonView().RPC("UpdateSeatAvailability", RpcTarget.MasterClient, 2, spawnedPlayer.GetPhotonView().ViewID, PhotonNetwork.LocalPlayer.ActorNumber);
+
             return;
         }
-
+        // TODO move all other ghosts to ghost seat as well
     }
 
     public override void OnLeftRoom()
@@ -128,40 +132,28 @@ public class NetworkPlayerSpawner : MonoBehaviourPunCallbacks
         base.OnLeftRoom();
     }
 
+  
+
+    // seems like only master client get notified by this callback
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         base.OnPlayerLeftRoom(otherPlayer);
 
-        if (PhotonNetwork.IsMasterClient)
+        if(PhotonNetwork.IsMasterClient)
         {
-            Debug.Log(otherPlayer.ActorNumber);
-
-            int leftFree = (int)PhotonNetwork.CurrentRoom.CustomProperties["LeftFree"];
-            int rightFree = (int)PhotonNetwork.CurrentRoom.CustomProperties["RightFree"];
-
-            Debug.Log(leftFree + " " + rightFree);
-            //TODO if player left was master, pass boat ownership to new master
-
-            // check who is seated
-            if (leftFree == otherPlayer.ActorNumber)
-            {
-                spawnedShip.GetPhotonView().RPC("UpdateSeatAvailability", RpcTarget.MasterClient, 0, 0);
-
-            }
-            else if (rightFree == otherPlayer.ActorNumber)
-            {
-                spawnedShip.GetPhotonView().RPC("UpdateSeatAvailability", RpcTarget.MasterClient, 1, 0);
-            }
+            spawnedShip.GetComponent<BoatManager>().UpdateSeatStatus(otherPlayer.ActorNumber);
         }
+        // if masterclient is the one that left, updateSeatStatus needs to be called on master client takeover
     }
 
+    
 
     private void InitializeShip()
     {
 
         if (PhotonNetwork.IsMasterClient)
         {
-            spawnedShip = PhotonNetwork.Instantiate(pathToPrefabs + spawnedShipPrefab.name, startingShipLocation.transform.position, startingShipLocation.transform.rotation);
+            spawnedShip = PhotonNetwork.InstantiateRoomObject(pathToPrefabs + spawnedShipPrefab.name, startingShipLocation.transform.position, startingShipLocation.transform.rotation);
             spawnedShip.GetPhotonView().RPC("SetShipID", RpcTarget.MasterClient);
         } else
         {
@@ -170,6 +162,10 @@ public class NetworkPlayerSpawner : MonoBehaviourPunCallbacks
             spawnedShip = shipPhotonView?.gameObject;
         }
 
+    }
+    public GameObject getSpawnedShip()
+    {
+        return spawnedShip;
     }
 
 }

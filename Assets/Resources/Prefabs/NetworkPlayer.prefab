@@ -59,8 +59,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8063358705144518308}
   - component: {fileID: 5178368203732038974}
+  - component: {fileID: 8812042211046567743}
   - component: {fileID: 388217249182557825}
-  - component: {fileID: 2596643859285292978}
   - component: {fileID: 679518991710800873}
   m_Layer: 0
   m_Name: NetworkPlayer
@@ -100,11 +100,11 @@ MonoBehaviour:
   ObservedComponentsFoldoutOpen: 1
   Group: 0
   prefixField: -1
-  Synchronization: 2
+  Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
-  - {fileID: 2596643859285292978}
+  - {fileID: 8812042211046567743}
   - {fileID: 2594037101674380086}
   - {fileID: 7387545317838163216}
   - {fileID: 2622476944591045323}
@@ -112,6 +112,22 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &8812042211046567743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2733493425514693845}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
 --- !u!114 &388217249182557825
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -128,22 +144,6 @@ MonoBehaviour:
   head: {fileID: 3264944178061876605}
   leftHand: {fileID: 1955333061789396849}
   rightHand: {fileID: 7728445999914078138}
---- !u!114 &2596643859285292978
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2733493425514693845}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1
 --- !u!114 &679518991710800873
 MonoBehaviour:
   m_ObjectHideFlags: 0

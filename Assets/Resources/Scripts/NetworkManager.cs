@@ -24,6 +24,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         TryJoinOrCreateRoom();
     }
 
+
+
     private void TryJoinOrCreateRoom()
     {
         Debug.Log("Trying to join or create room.");
@@ -39,16 +41,37 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         base.OnJoinedRoom();
         if (PhotonNetwork.IsMasterClient)
         {
-            
+
             Hashtable properties = new Hashtable()
             {
                 { "LeftFree", 0},
-                { "RightFree", 0}
+                { "RightFree", 0},
+                { "MasterClientActorNumber", PhotonNetwork.MasterClient.ActorNumber }
             };
             PhotonNetwork.CurrentRoom.SetCustomProperties(properties);
 
         }
         Debug.Log("Joined a Room");
+
+    }
+
+
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        Debug.Log("MasterClient switched!");
+        base.OnMasterClientSwitched(newMasterClient);
+        if (PhotonNetwork.IsMasterClient)
+        {
+            int prevMasterClientActorNr = (int)PhotonNetwork.CurrentRoom.CustomProperties["MasterClientActorNumber"];
+            GameObject boat = PhotonView.Find((int)PhotonNetwork.CurrentRoom.CustomProperties["ShipID"])?.gameObject;
+
+            boat.GetComponent<BoatManager>().UpdateSeatStatus(prevMasterClientActorNr);
+
+
+            Hashtable updatedProperties = new Hashtable();
+            updatedProperties["MasterClientActorNumber"] = PhotonNetwork.MasterClient.ActorNumber;
+            PhotonNetwork.CurrentRoom.SetCustomProperties(updatedProperties);
+        }
 
     }
 
