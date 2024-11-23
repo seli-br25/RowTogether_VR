@@ -78,6 +78,27 @@ public class NetworkPlayerSpawner : MonoBehaviourPunCallbacks
 
         spawnedPlayer = PhotonNetwork.Instantiate(pathToPrefabs + spawnedPlayerPrefab.name, XROrigin.transform.position, XROrigin.transform.rotation);
 
+
+        // first move all already joined photons to correct seating
+        if (leftSeat > 0)
+        {
+            GameObject leftSeatedPlayer = PhotonView.Find(leftSeat)?.gameObject;
+            leftSeatedPlayer.transform.SetParent(spawnedShip.transform.Find("Seats/Left Seat").transform);
+            leftSeatedPlayer.transform.localPosition = Vector3.zero;
+        }
+
+        if (rightSeat > 0) 
+        {
+            GameObject rightSeatedPlayer = PhotonView.Find(rightSeat)?.gameObject;
+            rightSeatedPlayer.transform.SetParent(spawnedShip.transform.Find("Seats/Right Seat").transform);
+            rightSeatedPlayer.transform.localPosition = Vector3.zero;
+        }
+
+        // TODO assign all ghosts to ghost spot
+
+        // after all photons correctly synched, join 1 seat if open
+
+
         // empty 
         // set the xrorigin as child, synchronize this to all connected clients, update the seat availability
         if (leftSeat == 0)
@@ -88,15 +109,6 @@ public class NetworkPlayerSpawner : MonoBehaviourPunCallbacks
             spawnedShip.GetPhotonView().RPC("UpdateSeatAvailability", RpcTarget.MasterClient, 0, spawnedPlayer.GetPhotonView().ViewID, PhotonNetwork.LocalPlayer.ActorNumber);
             return;
         }
-
-        // occupied
-        // set the gameobject of already seated players 
-        else if (leftSeat > 0)
-        {
-            GameObject leftSeatedPlayer = PhotonView.Find(leftSeat)?.gameObject;
-            leftSeatedPlayer.transform.SetParent(spawnedShip.transform.Find("Seats/Left Seat").transform);
-            leftSeatedPlayer.transform.localPosition= Vector3.zero;
-        }
         
         if (rightSeat == 0)
         {
@@ -106,12 +118,7 @@ public class NetworkPlayerSpawner : MonoBehaviourPunCallbacks
             spawnedShip.GetPhotonView().RPC("UpdateSeatAvailability", RpcTarget.MasterClient, 1, spawnedPlayer.GetPhotonView().ViewID, PhotonNetwork.LocalPlayer.ActorNumber);
             return;
         }
-        else if (rightSeat > 0)
-        {
-            GameObject rightSeatedPlayer = PhotonView.Find(rightSeat)?.gameObject;
-            rightSeatedPlayer.transform.SetParent(spawnedShip.transform.Find("Seats/Right Seat").transform);
-            rightSeatedPlayer.transform.localPosition = Vector3.zero;
-        }
+        
 
         // spawn ghost observers
         if (leftSeat != 0 && rightSeat != 0)

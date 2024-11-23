@@ -21,7 +21,8 @@ public class Character : MonoBehaviour
     private Transform leftHandRig;
     private Transform rightHandRig;
 
-    private bool isSeated;
+    // TODO maybe isSeated to toggle between world and local position ?
+    private bool isSeated = true;
 
     private bool hasFinished = false;
     private static int placementCounter = 0;
@@ -46,22 +47,25 @@ public class Character : MonoBehaviour
     private void SeatedAsChild(int seatNr, int boatViewId, int playerViewId)
     {
         Debug.Log($"Attempting to seat {playerViewId} as child of {boatViewId}");
+
+        GameObject seatedPlayer = PhotonView.Find(playerViewId)?.gameObject;
+        GameObject boat = PhotonView.Find(boatViewId)?.gameObject;
+        string seat;
+        if (seatNr == 0)
         {
-            GameObject seatedPlayer = PhotonView.Find(playerViewId)?.gameObject;
-            GameObject boat = PhotonView.Find(boatViewId)?.gameObject;
-            string seat;
-            if (seatNr == 0)
-            {
-                seat = "Seats/Left Seat";
-            }
-            else
-            {
-                seat = "Seats/Right Seat";
-            }
-            seatedPlayer.transform.SetParent(boat.transform.Find(seat).transform);
-            seatedPlayer.transform.localPosition = Vector3.zero;
-            Debug.Log($"Seated {playerViewId} as child of {boatViewId}");
+            seat = "Seats/Left Seat";
         }
+        else if (seatNr == 1)
+        {
+            seat = "Seats/Right Seat";
+        }
+        else
+        {
+            seat = "Seats/Ghost Seat";
+        }
+        seatedPlayer.transform.SetParent(boat.transform.Find(seat).transform);
+        seatedPlayer.transform.localPosition = Vector3.zero;
+        Debug.Log($"Seated {playerViewId} as child of {boatViewId}");
     }
 
     // Update is called once per frame
@@ -89,11 +93,11 @@ public class Character : MonoBehaviour
             leftHand.gameObject.SetActive(false);
             head.gameObject.SetActive(false);
 
-            MapPosition(this.transform, xrRig, true);
-            MapPosition(cameraOffset, cameraOffsetRig, true);
-            MapPosition(head, headRig, true);
-            MapPosition(leftHand, leftHandRig, true);
-            MapPosition(rightHand, rightHandRig, true);
+            MapPosition(this.transform, xrRig, isSeated);
+            MapPosition(cameraOffset, cameraOffsetRig, isSeated);
+            MapPosition(head, headRig, isSeated);
+            MapPosition(leftHand, leftHandRig, isSeated);
+            MapPosition(rightHand, rightHandRig, isSeated);
         }
     }
 
@@ -101,11 +105,20 @@ public class Character : MonoBehaviour
     {
 
         // why do this ?
-        // because non master clients will signifcantly lag if behind synchronization in master clients view, if non master clients are not child of boat as well
-        // master client would have to wait for the boat to move, synch movement to other clients, other clients would perceive boat movment and since other clients
-        // are children of boat in their view, they move together with the boat and synch their position
-        // but master client receives this position change way too late causing rubber banding
-        // master client and boat will not lag behind synch in other players view because master client and boat are synched at the same time
+        // Previous setup:
+        // onJoin room, local player (XRrig) get seated on boat (become child of boat seat). Benefit of strong coupled moving along the boat due to parten child relation.
+        // all other photon players in the room would not be seated, but transform be dependednt on world transform
+        // Since boat and master client are synched by master client, the synch of boat and master are received simulatneously on all other clients, making master and boat movement seem coupled.
+        // However, from the master clients perspective, every client is lagging behind the boat movement. 
+        // Reason : the movement of other clients are dependent on boat position. Moving the boat moves a clients transform which will then be synched by photon view transform.
+            // The master client receives the updated clients position after the fact that the boat has already moved -> rubber banding occurs for master client, but not perceivable for non master clients view.
+        // Solution: Keep track of room properties with actors assigned to seats on the boat.
+            // OnJoinRoom synchronize all existing player photon views by moving them to the correct seats (child object of a seat) for every newly joined instance
+            // With RPC, existing clients will also move newly joined clients to the correct seats. 
+            // This way, when seated the only thing needed to be moved is the boat. Because every client in every instance are now seated (become child of the boat),
+            // the movement is synched through movement of the boat with 0 rubber banding in every instance.
+            // Local movement is therefore important here.
+
         if (seated)
         {
             target.localPosition = rigTransform.localPosition;
