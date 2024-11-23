@@ -44,6 +44,7 @@ MonoBehaviour:
   - UpdateSeatAvailability
   - SynchBoatObject
   - SetShipID
+  - SeatedAsChild
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

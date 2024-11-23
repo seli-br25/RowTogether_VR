@@ -12,6 +12,8 @@ TagManager:
   - Right Hand Model
   - Left Hand Model
   - Goal
+  - Left Seat
+  - Right Seat
   layers:
   - Default
   - TransparentFX

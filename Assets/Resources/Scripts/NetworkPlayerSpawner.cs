@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
+using Unity.XR.CoreUtils;
 
 public class NetworkPlayerSpawner : MonoBehaviourPunCallbacks
 {
@@ -65,36 +66,60 @@ public class NetworkPlayerSpawner : MonoBehaviourPunCallbacks
 
     private void SpawnPlayer()
     {
+        // contains
+        int leftSeat = (int)PhotonNetwork.CurrentRoom.CustomProperties["LeftFree"];
+        int rightSeat = (int)PhotonNetwork.CurrentRoom.CustomProperties["RightFree"];
 
-        int leftFree = (int)PhotonNetwork.CurrentRoom.CustomProperties["LeftFree"];
-        int rightFree = (int)PhotonNetwork.CurrentRoom.CustomProperties["RightFree"];
+
+        // make seating occupied players a child of the seat
+
+
 
         spawnedPlayer = PhotonNetwork.Instantiate(pathToPrefabs + spawnedPlayerPrefab.name, XROrigin.transform.position, XROrigin.transform.rotation);
 
+        // empty 
+        // set the xrorigin as child, synchronize this to all connected clients, update the seat availability
+        if (leftSeat == 0)
+        {
+            XROrigin.transform.SetParent(spawnedShip.transform.Find("Seats/Left Seat").transform);
+            XROrigin.transform.localPosition = Vector3.zero;
+            spawnedPlayer.GetPhotonView().RPC("SeatedAsChild", RpcTarget.All, 0, spawnedShip.GetPhotonView().ViewID, spawnedPlayer.GetPhotonView().ViewID);
+            spawnedShip.GetPhotonView().RPC("UpdateSeatAvailability", RpcTarget.MasterClient, 0, spawnedPlayer.GetPhotonView().ViewID);
+            return;
+        }
+
+        // occupied
+        // set the gameobject of already seated players 
+        else if (leftSeat > 0)
+        {
+            GameObject leftSeatedPlayer = PhotonView.Find(leftSeat)?.gameObject;
+            leftSeatedPlayer.transform.SetParent(spawnedShip.transform.Find("Seats/Left Seat").transform);
+            leftSeatedPlayer.transform.localPosition= Vector3.zero;
+        }
+        
+        if (rightSeat == 0)
+        {
+            XROrigin.transform.SetParent(spawnedShip.transform.Find("Seats/Right Seat").transform);
+            XROrigin.transform.localPosition = Vector3.zero;
+            spawnedPlayer.GetPhotonView().RPC("SeatedAsChild", RpcTarget.All, 1, spawnedShip.GetPhotonView().ViewID , spawnedPlayer.GetPhotonView().ViewID);
+            spawnedShip.GetPhotonView().RPC("UpdateSeatAvailability", RpcTarget.MasterClient, 1, spawnedPlayer.GetPhotonView().ViewID);
+            return;
+        }
+        else if (rightSeat > 0)
+        {
+            GameObject rightSeatedPlayer = PhotonView.Find(rightSeat)?.gameObject;
+            rightSeatedPlayer.transform.SetParent(spawnedShip.transform.Find("Seats/Right Seat").transform);
+            rightSeatedPlayer.transform.localPosition = Vector3.zero;
+        }
 
         // spawn ghost observers
-        if (leftFree != 0 && rightFree != 0)
+        if (leftSeat != 0 && rightSeat != 0)
         {
-            XROrigin.transform.SetParent(spawnedShip.transform.Find("Ghost Seat").transform, false);
+            XROrigin.transform.SetParent(spawnedShip.transform.Find("Ghost Seat").transform);
+            XROrigin.transform.localPosition = Vector3.zero;
             return;
         }
 
-
-        if (leftFree == 0)
-        {
-            XROrigin.transform.SetParent(spawnedShip.transform.Find("Left Seat").transform, false);
-            spawnedShip.GetComponent<PhotonView>().RPC("UpdateSeatAvailability", RpcTarget.MasterClient, 0, PhotonNetwork.LocalPlayer.ActorNumber);
-            return;
-        }
-
-        if (rightFree == 0)
-        {
-            XROrigin.transform.SetParent(spawnedShip.transform.Find("Right Seat").transform, false);
-            spawnedShip.GetComponent<PhotonView>().RPC("UpdateSeatAvailability", RpcTarget.MasterClient, 1, PhotonNetwork.LocalPlayer.ActorNumber);
-            return;
-        }
-
-        
     }
 
     public override void OnLeftRoom()
@@ -120,12 +145,12 @@ public class NetworkPlayerSpawner : MonoBehaviourPunCallbacks
             // check who is seated
             if (leftFree == otherPlayer.ActorNumber)
             {
-                spawnedShip.GetComponent<PhotonView>().RPC("UpdateSeatAvailability", RpcTarget.MasterClient, 0, 0);
+                spawnedShip.GetPhotonView().RPC("UpdateSeatAvailability", RpcTarget.MasterClient, 0, 0);
 
             }
             else if (rightFree == otherPlayer.ActorNumber)
             {
-                spawnedShip.GetComponent<PhotonView>().RPC("UpdateSeatAvailability", RpcTarget.MasterClient, 1, 0);
+                spawnedShip.GetPhotonView().RPC("UpdateSeatAvailability", RpcTarget.MasterClient, 1, 0);
             }
         }
     }
@@ -137,7 +162,7 @@ public class NetworkPlayerSpawner : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient)
         {
             spawnedShip = PhotonNetwork.Instantiate(pathToPrefabs + spawnedShipPrefab.name, startingShipLocation.transform.position, startingShipLocation.transform.rotation);
-            spawnedShip.GetComponent<PhotonView>().RPC("SetShipID", RpcTarget.MasterClient);
+            spawnedShip.GetPhotonView().RPC("SetShipID", RpcTarget.MasterClient);
         } else
         {
             int id = (int)PhotonNetwork.CurrentRoom.CustomProperties["ShipID"];

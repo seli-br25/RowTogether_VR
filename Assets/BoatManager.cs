@@ -1,11 +1,14 @@
 using UnityEngine;
 using Photon.Pun;
 using ExitGames.Client.Photon;
+using UnityEngine.XR.Interaction.Toolkit;
 
 public class BoatManager : MonoBehaviourPunCallbacks
 {
+
+
     [PunRPC]
-    private void UpdateSeatAvailability(int seatNr, int playerId)
+    private void UpdateSeatAvailability(int seatNr, int playerViewId)
     {
 
         // Non master client should not update room properties
@@ -21,16 +24,16 @@ public class BoatManager : MonoBehaviourPunCallbacks
 
         if (seatNr == 0)
         {
-            updatedProperties["LeftFree"] = playerId;
+            updatedProperties["LeftFree"] = playerViewId;
         }
         else if (seatNr == 1)
         {
-            updatedProperties["RightFree"] = playerId;
+            updatedProperties["RightFree"] = playerViewId;
         }
 
         PhotonNetwork.CurrentRoom.SetCustomProperties(updatedProperties);
 
-        Debug.Log($"Seat '{seatNr}' used by id: '{playerId}'.");
+        Debug.Log($"Seat '{seatNr}' used by id: '{playerViewId}'.");
 
         // TODO implement prompt for player joining in seat
     }
