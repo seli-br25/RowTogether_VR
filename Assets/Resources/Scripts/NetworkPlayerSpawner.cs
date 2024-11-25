@@ -28,7 +28,7 @@ public class NetworkPlayerSpawner : MonoBehaviourPunCallbacks
     {
         base.OnPlayerEnteredRoom(newPlayer);
 
-
+        Debug.Log("Entered");
         // synchronize the ship gameobject with everyone
         if (PhotonNetwork.IsMasterClient)
         {
@@ -42,6 +42,12 @@ public class NetworkPlayerSpawner : MonoBehaviourPunCallbacks
         base.OnJoinedRoom();
 
 
+        StartCoroutine(SpawnGameobjects());
+    }
+
+    IEnumerator Start()
+    {
+        yield return new WaitUntil(() => PhotonNetwork.IsConnected && PhotonNetwork.InRoom);
         StartCoroutine(SpawnGameobjects());
     }
 

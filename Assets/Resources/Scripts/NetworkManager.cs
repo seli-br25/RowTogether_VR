@@ -12,20 +12,20 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void Start()
     {
-        PhotonNetwork.ConnectUsingSettings();
-        Debug.Log("Try connect to server...");
+        //Debug.Log("Try connect to server...");
+        Debug.Log($"Scene Loaded, Photon network connection status: '{PhotonNetwork.IsConnected}'");
     }
 
+    // Deprecated, will only be triggered in scene 0 when connected to lobby
     public override void OnConnectedToMaster()
     {
         Debug.Log("We are now connected to the " + PhotonNetwork.CloudRegion + " server!");
         base.OnConnectedToMaster();
 
-        TryJoinOrCreateRoom();
+        //TryJoinOrCreateRoom();
     }
 
-
-
+    // Deprecated, Room creation or joining managed by scene 0 in RoomManager
     private void TryJoinOrCreateRoom()
     {
         Debug.Log("Trying to join or create room.");
@@ -36,6 +36,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinOrCreateRoom(roomPrefix + currentRoomIndex, roomOps, TypedLobby.Default);
     }
 
+    // Deprecated, Room initialization will be managed by scene 0 in RoomManager. will only be triggered by scene 0
     public override void OnJoinedRoom()
     {
         base.OnJoinedRoom();
@@ -49,10 +50,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
                 { "MasterClientActorNumber", PhotonNetwork.MasterClient.ActorNumber }
             };
             PhotonNetwork.CurrentRoom.SetCustomProperties(properties);
-
         }
         Debug.Log("Joined a Room");
-
     }
 
 
@@ -75,23 +74,19 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     }
 
+    // Deprecated, will be managed by scene 0 in RoomManager.  will only be triggered by scene 0
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
         Debug.Log($"Failed to join room {roomPrefix}{currentRoomIndex}: {message}, trying to join next room...");
         currentRoomIndex++;
-        TryJoinOrCreateRoom();
+        //TryJoinOrCreateRoom();
     }
 
+    // Still useful for masterclient already in room. But implemented in NetworkPlayerSpawner
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         Debug.Log("A new player joined the room");
         base.OnPlayerEnteredRoom(newPlayer);
     }
 
-    public override void OnLeftRoom()
-    {
-        Debug.Log("Left the room. Restarting room join process...");
-        currentRoomIndex = 1;
-        TryJoinOrCreateRoom();
-    }
 }
