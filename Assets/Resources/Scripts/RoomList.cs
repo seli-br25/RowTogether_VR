@@ -77,7 +77,7 @@ public class RoomList : MonoBehaviourPunCallbacks
         {
             GameObject roomItem = Instantiate(roomListItemPrefab, roomSelectionMenuContent);
             roomItem.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = room.Name;
-            roomItem.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = room.PlayerCount + "/ 2";
+            roomItem.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = room.PlayerCount + "/ 6";
             // Configure onclick callback with correct masterclient id for each room
             roomItem.GetComponent<Button>().onClick.AddListener(() => GetComponent<RoomManager>().OnClickJoinRoom(room.Name));
         }

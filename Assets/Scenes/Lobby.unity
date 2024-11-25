@@ -845,9 +845,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 592324869}
-  - component: {fileID: 592324870}
   - component: {fileID: 592324871}
   - component: {fileID: 592324872}
+  - component: {fileID: 592324870}
   m_Layer: 0
   m_Name: Lobby
   m_TagString: Untagged
