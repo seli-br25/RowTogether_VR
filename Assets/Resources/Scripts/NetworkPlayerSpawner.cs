@@ -36,14 +36,14 @@ public class NetworkPlayerSpawner : MonoBehaviourPunCallbacks
     }
 
 
-    // executed only by local client that just joined
-    public override void OnJoinedRoom()
-    {
-        base.OnJoinedRoom();
+    // executed only by local client that just joined, already handled by start
+    //public override void OnJoinedRoom()
+    //{
+    //    base.OnJoinedRoom();
 
 
-        StartCoroutine(SpawnGameobjects());
-    }
+    //    StartCoroutine(SpawnGameobjects());
+    //}
 
     IEnumerator Start()
     {

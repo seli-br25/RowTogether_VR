@@ -9,9 +9,15 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     private string roomPrefix = "Room ";
     private int currentRoomIndex = 1;
 
+    public bool DEBUG = false;
+
     // Start is called before the first frame update
     void Start()
     {
+        if (DEBUG)
+        {
+            PhotonNetwork.ConnectUsingSettings();
+        }
         //Debug.Log("Try connect to server...");
         Debug.Log($"Scene Loaded, Photon network connection status: '{PhotonNetwork.IsConnected}'");
     }
@@ -22,7 +28,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         Debug.Log("We are now connected to the " + PhotonNetwork.CloudRegion + " server!");
         base.OnConnectedToMaster();
 
-        //TryJoinOrCreateRoom();
+        TryJoinOrCreateRoom();
     }
 
     // Deprecated, Room creation or joining managed by scene 0 in RoomManager
