@@ -21,6 +21,7 @@ Listed are sources we used and every chatGPT prompt associated with Assignment3
 - https://www.youtube.com/watch?v=_QilKZ1f5Vo
 - https://www.youtube.com/watch?v=xRXOnuFji-Q
 - https://chatgpt.com/share/6744feed-f73c-8009-a953-46b2c6b72a67
+- https://assetstore.unity.com/packages/tools/lexic-a-procedural-name-generator-33221
 
 # Notes regarding implementation of Tasks
 
