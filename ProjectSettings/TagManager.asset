@@ -15,6 +15,7 @@ TagManager:
   - Left Seat
   - Right Seat
   - Boat
+  - Water
   layers:
   - Default
   - TransparentFX
