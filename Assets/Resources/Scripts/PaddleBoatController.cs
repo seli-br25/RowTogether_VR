@@ -41,12 +41,27 @@ public class PaddleBoatController : MonoBehaviour
         {
             calculatedVelocity = (transform.position - lastPosition) / Time.fixedDeltaTime;
             lastPosition = transform.position;
-            float speed = calculatedVelocity.magnitude;
 
-            if (speed > 0.1f)
+            float zMovement = Vector3.Dot(calculatedVelocity, -boat.transform.forward);
+            //float speed = calculatedVelocity.magnitude;
+
+            if (Mathf.Abs(zMovement) > 0.1f)
             {
-                Vector3 forceDirection = -boat.transform.forward * speed * forceMultiplier;
-                float appliedTorque = isLeftPaddle ? -torqueMultiplier * speed : torqueMultiplier * speed;
+                float speed = Mathf.Abs(zMovement);
+                Vector3 forceDirection;
+                float appliedTorque;
+
+                if (zMovement < 0)
+                {
+                    // forward movement
+                    forceDirection = -boat.transform.forward * speed * forceMultiplier;
+                    appliedTorque = isLeftPaddle ? -torqueMultiplier * speed : torqueMultiplier * speed;
+                } else
+                {
+                    // backward movement
+                    forceDirection = boat.transform.forward * speed * forceMultiplier;
+                    appliedTorque = isLeftPaddle ? torqueMultiplier * speed : torqueMultiplier * speed;
+                }
 
                 // Apply force and torque
                 boatRigidBody.AddForce(forceDirection);
