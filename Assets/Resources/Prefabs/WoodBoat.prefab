@@ -381,7 +381,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   forceMultiplier: 7
-  torqueMultiplier: 20
+  torqueMultiplier: 15
   boat: {fileID: 7476816626250502856}
   paddleCollider: {fileID: 309246792113151514}
   handleCollider: {fileID: 2629425346503265477}
@@ -860,7 +860,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   forceMultiplier: 7
-  torqueMultiplier: 20
+  torqueMultiplier: 15
   boat: {fileID: 7476816626250502856}
   paddleCollider: {fileID: 4509744150314962549}
   handleCollider: {fileID: 5421402059476743579}

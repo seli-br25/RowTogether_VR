@@ -30,7 +30,7 @@ public class PaddleBoatController : MonoBehaviour
     {
         initialLocalPosition = transform.localPosition;
         initialLocalRotation = transform.localRotation;
-        lastPosition = Vector3.negativeInfinity;
+        lastPosition = Vector3.zero;
 
         boatCollider = boat.GetComponent<Collider>();
         boatRigidBody = boat.GetComponent<Rigidbody>();
@@ -45,7 +45,7 @@ public class PaddleBoatController : MonoBehaviour
         if (inWater)
         {
             // check if paddle was outside of the water before
-            if (lastPosition == Vector3.negativeInfinity)
+            if (lastPosition == Vector3.zero)
             {
                 lastPosition = paddleCollider.bounds.center;
                 return;
@@ -100,7 +100,7 @@ public class PaddleBoatController : MonoBehaviour
             inWater = false;
             paddleRigidBody.isKinematic = true;
             Debug.Log("Paddle outside of water");
-            lastPosition = Vector3.negativeInfinity;
+            lastPosition = Vector3.zero;
         }
     }
 
