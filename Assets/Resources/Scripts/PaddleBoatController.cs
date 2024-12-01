@@ -108,5 +108,7 @@ public class PaddleBoatController : MonoBehaviour
     {
         transform.localPosition = initialLocalPosition;
         transform.localRotation = initialLocalRotation;
+        inWater = false;
+        lastPosition = Vector3.zero;
     }
 }
