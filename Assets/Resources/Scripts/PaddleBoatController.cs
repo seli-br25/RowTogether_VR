@@ -1,18 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class PaddleBoatController : MonoBehaviour
 {
-    public float forceMultiplier = 0.00000001f;
-    public float torqueMultiplier = 4f;
+    public float forceMultiplier = 2f;
+    public float torqueMultiplier = 10f;
 
     public GameObject boat;
     private Collider boatCollider;
-    public Collider playerCollider;
     private Rigidbody boatRigidBody;
     private Rigidbody paddleRigidBody;
-    private Collider paddleCollider;
+    public Collider paddleCollider;
+    public Collider handleCollider;
 
     private bool inWater = false;
     [SerializeField]
@@ -21,29 +22,41 @@ public class PaddleBoatController : MonoBehaviour
     private Vector3 lastPosition;
     private Vector3 calculatedVelocity;
 
+    private Vector3 initialLocalPosition;
+    private Quaternion initialLocalRotation;
+
     // Start is called before the first frame update
     void Start()
     {
-        lastPosition = transform.position;
+        initialLocalPosition = transform.localPosition;
+        initialLocalRotation = transform.localRotation;
+        lastPosition = Vector3.negativeInfinity;
 
         boatCollider = boat.GetComponent<Collider>();
         boatRigidBody = boat.GetComponent<Rigidbody>();
         paddleRigidBody = this.GetComponent<Rigidbody>();
-        paddleCollider = this.GetComponent<Collider>();
 
         Physics.IgnoreCollision(paddleCollider, boatCollider);
-        Physics.IgnoreCollision(paddleCollider, playerCollider);
+        Physics.IgnoreCollision(handleCollider, boatCollider);
     }
 
     void FixedUpdate()
     {
         if (inWater)
         {
-            calculatedVelocity = (transform.position - lastPosition) / Time.fixedDeltaTime;
-            lastPosition = transform.position;
+            // check if paddle was outside of the water before
+            if (lastPosition == Vector3.negativeInfinity)
+            {
+                lastPosition = paddleCollider.bounds.center;
+                return;
+            }
 
-            float zMovement = Vector3.Dot(calculatedVelocity, -boat.transform.forward);
-            //float speed = calculatedVelocity.magnitude;
+            // calculate change of paddle
+            Vector3 currentPosition = paddleCollider.bounds.center;
+            calculatedVelocity = (currentPosition - lastPosition) / Time.fixedDeltaTime;
+            lastPosition = currentPosition;
+
+            float zMovement = Vector3.Dot(calculatedVelocity, boat.transform.forward);
 
             if (Mathf.Abs(zMovement) > 0.1f)
             {
@@ -54,19 +67,18 @@ public class PaddleBoatController : MonoBehaviour
                 if (zMovement < 0)
                 {
                     // forward movement
-                    forceDirection = -boat.transform.forward * speed * forceMultiplier;
-                    appliedTorque = isLeftPaddle ? -torqueMultiplier * speed : torqueMultiplier * speed;
+                    forceDirection = boat.transform.forward * speed * forceMultiplier;
+                    appliedTorque = isLeftPaddle ? torqueMultiplier * speed : -torqueMultiplier * speed;
                 } else
                 {
                     // backward movement
-                    forceDirection = boat.transform.forward * speed * forceMultiplier;
-                    appliedTorque = isLeftPaddle ? torqueMultiplier * speed : torqueMultiplier * speed;
+                    forceDirection = -boat.transform.forward * speed * forceMultiplier;
+                    appliedTorque = isLeftPaddle ? -torqueMultiplier * speed : torqueMultiplier * speed;
                 }
 
                 // Apply force and torque
                 boatRigidBody.AddForce(forceDirection);
                 boatRigidBody.AddTorque(Vector3.up * appliedTorque);
-                boatRigidBody.velocity = Vector3.ClampMagnitude(boatRigidBody.velocity, 0.5f);
             }
         }
     }
@@ -76,19 +88,25 @@ public class PaddleBoatController : MonoBehaviour
         if (other.tag.Equals("Water"))
         {
             inWater = true;
-            paddleRigidBody.isKinematic = false;
+            //paddleRigidBody.isKinematic = false;
             Debug.Log("Paddle is in water");
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.tag.Equals("Water") && this.transform.position.y > 0.7)
+        if (other.tag.Equals("Water"))
         {
             inWater = false;
             paddleRigidBody.isKinematic = true;
-            Debug.Log("Paddle is in not water");
+            Debug.Log("Paddle outside of water");
+            lastPosition = Vector3.negativeInfinity;
         }
     }
 
+    public void OnPaddleRelease()
+    {
+        transform.localPosition = initialLocalPosition;
+        transform.localRotation = initialLocalRotation;
+    }
 }

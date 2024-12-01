@@ -17,13 +17,13 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/Lobby.unity
     guid: f6342b8b6effa974b88961dfd27344cd
-  - enabled: 0
-    path: Assets/Scenes/Photon GameScene.unity
+  - enabled: 1
+    path: Assets/Scenes/LocomotionPhotonGameScene.unity
     guid: 2eb5277e55f9fbd4c9018b8db176d5c1
   - enabled: 0
     path: Assets/Scenes/Dev Scenes/Photon Scene.unity
     guid: cad6fcb11eee6e2459dedaf701b7d4e0
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/GameScene.unity
     guid: 1e56d186264bb41dcbe128c530b7dd75
   m_configObjects:
