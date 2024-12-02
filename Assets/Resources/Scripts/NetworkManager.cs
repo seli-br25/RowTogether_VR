@@ -20,6 +20,9 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         }
         //Debug.Log("Try connect to server...");
         Debug.Log($"Scene Loaded, Photon network connection status: '{PhotonNetwork.IsConnected}'");
+
+        PhotonNetwork.SendRate = 40;
+        PhotonNetwork.SerializationRate = 10;
     }
 
     // Deprecated, will only be triggered in scene 0 when connected to lobby

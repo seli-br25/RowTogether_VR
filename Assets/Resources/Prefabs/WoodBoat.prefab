@@ -1106,7 +1106,7 @@ GameObject:
   - component: {fileID: 667170692737159560}
   - component: {fileID: 2247787470028677713}
   - component: {fileID: 7155380946252241716}
-  - component: {fileID: 1604767364715005226}
+  - component: {fileID: 5269899726843536055}
   m_Layer: 0
   m_Name: WoodBoat
   m_TagString: Boat
@@ -1201,7 +1201,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!65 &2818298389355605745
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1246,11 +1246,11 @@ MonoBehaviour:
   ObservedComponentsFoldoutOpen: 1
   Group: 0
   prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 1
+  Synchronization: 2
+  OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
-  - {fileID: 1604767364715005226}
+  - {fileID: 5269899726843536055}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -1266,7 +1266,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5ed45394bd06a7429d72c3f3b5d86db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1604767364715005226
+  body: {fileID: 0}
+--- !u!114 &5269899726843536055
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1275,13 +1276,30 @@ MonoBehaviour:
   m_GameObject: {fileID: 7476816626250502856}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Script: {fileID: 11500000, guid: 8efc6b1d64977384eb3405357896c656, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1
+  m_PositionModel:
+    SynchronizeEnabled: 1
+    TeleportEnabled: 1
+    TeleportIfDistanceGreaterThan: 3
+    InterpolateOption: 2
+    InterpolateMoveTowardsSpeed: 1
+    InterpolateLerpSpeed: 3
+    ExtrapolateOption: 1
+    ExtrapolateSpeed: 5.04
+    ExtrapolateIncludingRoundTripTime: 1
+    ExtrapolateNumberOfStoredPositions: 1
+  m_RotationModel:
+    SynchronizeEnabled: 1
+    InterpolateOption: 2
+    InterpolateRotateTowardsSpeed: 180
+    InterpolateLerpSpeed: 5
+  m_ScaleModel:
+    SynchronizeEnabled: 0
+    InterpolateOption: 0
+    InterpolateMoveTowardsSpeed: 1
+    InterpolateLerpSpeed: 0
 --- !u!1 &7994600756287242023
 GameObject:
   m_ObjectHideFlags: 0

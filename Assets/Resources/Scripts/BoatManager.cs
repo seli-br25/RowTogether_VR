@@ -5,9 +5,16 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 public class BoatManager : MonoBehaviourPunCallbacks
 {
+    public Rigidbody body;
 
-
-
+    public void Start()
+    {
+        body = GetComponent<Rigidbody>();
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            body.isKinematic = true;
+        }
+    }
 
     public void UpdateSeatStatus(int actorNumber)
     {

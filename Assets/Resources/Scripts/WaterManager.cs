@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +9,16 @@ using UnityEngine;
 public class WaterManager : MonoBehaviour
 {
     private MeshFilter meshFilter;
+
+
+    public void Start()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PhotonView photonView = GetComponent<PhotonView>();
+            PhotonNetwork.AllocateRoomViewID(photonView);
+        }
+    }
 
     private void Awake()
     {

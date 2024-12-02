@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class WaveManager : MonoBehaviour
+public class WaveManager : MonoBehaviourPun, IPunObservable
 {
     public static WaveManager instance;
 
@@ -10,6 +11,21 @@ public class WaveManager : MonoBehaviour
     public float lenth = 1f;
     public float speed = 1f;
     public float offset = 0f;
+
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            stream.SendNext(offset);
+        }
+        else if (stream.IsReading) 
+        {
+            offset = (float)stream.ReceiveNext();
+        }
+
+    }
+
 
     private void Awake()
     {
@@ -39,7 +55,6 @@ public class WaveManager : MonoBehaviour
     {
         return GetWaveHeight(worldPos) * transform.localScale.y;
     }
-
 
 
 }
