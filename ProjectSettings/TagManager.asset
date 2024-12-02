@@ -16,6 +16,9 @@ TagManager:
   - Right Seat
   - Boat
   - Water
+  - Obstacle
+  - HeartItem
+  - SpeedTrap
   layers:
   - Default
   - TransparentFX

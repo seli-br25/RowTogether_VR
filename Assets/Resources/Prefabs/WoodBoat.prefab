@@ -381,7 +381,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   forceMultiplier: 7
-  torqueMultiplier: 15
+  torqueMultiplier: 12
   boat: {fileID: 7476816626250502856}
   paddleCollider: {fileID: 309246792113151514}
   handleCollider: {fileID: 2629425346503265477}
@@ -872,7 +872,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   forceMultiplier: 7
-  torqueMultiplier: 15
+  torqueMultiplier: 12
   boat: {fileID: 7476816626250502856}
   paddleCollider: {fileID: 4509744150314962549}
   handleCollider: {fileID: 5421402059476743579}
@@ -1103,6 +1103,7 @@ GameObject:
   - component: {fileID: 7476816626248567816}
   - component: {fileID: 2818298389355605741}
   - component: {fileID: 2818298389355605745}
+  - component: {fileID: 667170692737159560}
   - component: {fileID: 2247787470028677713}
   - component: {fileID: 7155380946252241716}
   - component: {fileID: 1604767364715005226}
@@ -1214,6 +1215,22 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.3110088, y: 0.4004551, z: 2.462235}
   m_Center: {x: 0, y: 0.09977247, z: -0.24424332}
+--- !u!114 &667170692737159560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7476816626250502856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2474898d6fceb480e98add6873eec712, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lives: 3
+  immunityTime: 3
+  paddleLeft: {fileID: 3433041524522613087}
+  paddleRight: {fileID: 7021600674944215932}
 --- !u!114 &2247787470028677713
 MonoBehaviour:
   m_ObjectHideFlags: 0
