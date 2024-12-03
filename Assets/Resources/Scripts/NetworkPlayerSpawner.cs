@@ -111,6 +111,8 @@ public class NetworkPlayerSpawner : MonoBehaviourPunCallbacks
         {
             XROrigin.transform.SetParent(spawnedShip.transform.Find("Seats/Left Seat").transform);
             XROrigin.transform.localPosition = Vector3.zero;
+            XROrigin.transform.localRotation = Quaternion.identity;
+
             spawnedPlayer.GetPhotonView().RPC("SeatedAsChild", RpcTarget.All, 0, spawnedShip.GetPhotonView().ViewID, spawnedPlayer.GetPhotonView().ViewID);
             spawnedShip.GetPhotonView().RPC("UpdateSeatAvailability", RpcTarget.MasterClient, 0, spawnedPlayer.GetPhotonView().ViewID, PhotonNetwork.LocalPlayer.ActorNumber);
             return;
@@ -120,6 +122,8 @@ public class NetworkPlayerSpawner : MonoBehaviourPunCallbacks
         {
             XROrigin.transform.SetParent(spawnedShip.transform.Find("Seats/Right Seat").transform);
             XROrigin.transform.localPosition = Vector3.zero;
+            XROrigin.transform.localRotation = Quaternion.identity;
+
             spawnedPlayer.GetPhotonView().RPC("SeatedAsChild", RpcTarget.All, 1, spawnedShip.GetPhotonView().ViewID , spawnedPlayer.GetPhotonView().ViewID);
             spawnedShip.GetPhotonView().RPC("UpdateSeatAvailability", RpcTarget.MasterClient, 1, spawnedPlayer.GetPhotonView().ViewID, PhotonNetwork.LocalPlayer.ActorNumber);
             return;
