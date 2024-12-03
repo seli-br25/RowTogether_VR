@@ -903,8 +903,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5686134208185362930}
-  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -0.001, y: 0.001, z: -0.035}
+  m_LocalRotation: {x: -0.06162845, y: -0.06162845, z: -0.70441604, w: 0.70441604}
+  m_LocalPosition: {x: -0.007, y: 0.001, z: -0.06}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -912,7 +912,7 @@ Transform:
   - {fileID: 5686134208185136534}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
+  m_LocalEulerAnglesHint: {x: -10, y: 0, z: -90}
 --- !u!95 &5686134208192617028
 Animator:
   serializedVersion: 5
@@ -947,6 +947,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputActions: {fileID: -944628639613478452, guid: 920f94dfa48fe41cf9cb69af62f7aef5, type: 3}
+  photonUse: 0
 --- !u!135 &7261417013007679807
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -959,7 +960,7 @@ SphereCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.03
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0.03, y: 0.01, z: 0}
 --- !u!1 &5686134208185362932
 GameObject:
   m_ObjectHideFlags: 0
