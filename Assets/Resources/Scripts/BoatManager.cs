@@ -2,6 +2,7 @@ using UnityEngine;
 using Photon.Pun;
 using ExitGames.Client.Photon;
 using UnityEngine.XR.Interaction.Toolkit;
+using Photon.Realtime;
 
 public class BoatManager : MonoBehaviourPunCallbacks
 {
@@ -13,6 +14,14 @@ public class BoatManager : MonoBehaviourPunCallbacks
         if (!PhotonNetwork.IsMasterClient)
         {
             body.isKinematic = true;
+        }
+    }
+
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        { 
+            body.isKinematic = false;
         }
     }
 

@@ -1048,7 +1048,6 @@ GameObject:
   - component: {fileID: 328773490}
   - component: {fileID: 328773492}
   - component: {fileID: 328773493}
-  - component: {fileID: 328773494}
   m_Layer: 0
   m_Name: Water
   m_TagString: Water
@@ -1179,24 +1178,12 @@ MonoBehaviour:
   prefixField: -1
   Synchronization: 2
   OwnershipTransfer: 0
-  observableSearch: 0
+  observableSearch: 2
   ObservedComponents:
   - {fileID: 328773490}
   sceneViewId: 1
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &328773494
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 328773486}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 09130d72344ae07449fb03b6cc73ec9b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &330914380 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 629542536758182806, guid: 7ca2fa2809968cf47852232e5d4a6e43, type: 3}

@@ -19,7 +19,9 @@ public class Character : MonoBehaviour
     private Transform cameraOffsetRig;
     private Transform headRig;
     private Transform leftHandRig;
+    private HandAnimation leftHandAnimation;
     private Transform rightHandRig;
+    private HandAnimation rightHandAnimation;
 
     // TODO maybe isSeated to toggle between world and local position ?
     private bool isSeated = true;
@@ -39,7 +41,18 @@ public class Character : MonoBehaviour
         cameraOffsetRig = rig.transform.Find("Camera Offset");
         headRig = rig.transform.Find("Camera Offset/Main Camera");
         leftHandRig = rig.transform.Find("Camera Offset/Left Controller");
+        leftHandAnimation = leftHand.GetComponentInChildren<HandAnimation>();
         rightHandRig = rig.transform.Find("Camera Offset/Right Controller");
+        rightHandAnimation = rightHand.GetComponentInChildren<HandAnimation>();
+
+        if (photonView.IsMine)
+        {
+            foreach(var item in GetComponentsInChildren<Renderer>())
+            {
+                item.enabled = false;
+            }
+        }
+
     }
 
 
@@ -88,16 +101,24 @@ public class Character : MonoBehaviour
             //Debug.Log($" is my view {photonView.IsMine}, ${GetComponent<PhotonView>().ViewID}");
             // We don't want to disable the root photon player game object.
             //this.gameObject.SetActive(false);
-            cameraOffset.gameObject.SetActive(false);
-            rightHand.gameObject.SetActive(false);
-            leftHand.gameObject.SetActive(false);
-            head.gameObject.SetActive(false);
+
+            // these should not be disabled, otherwise hand animation wont synch because
+            // if Character is mine, then my photon animation view wont know when I have triggered an animation on the hands
+
+            //cameraOffset.gameObject.SetActive(false);
+            //rightHand.gameObject.SetActive(false);
+            //leftHand.gameObject.SetActive(false);
+            //head.gameObject.SetActive(false);
 
             MapPosition(this.transform, xrRig, isSeated);
             MapPosition(cameraOffset, cameraOffsetRig, isSeated);
             MapPosition(head, headRig, isSeated);
             MapPosition(leftHand, leftHandRig, isSeated);
             MapPosition(rightHand, rightHandRig, isSeated);
+
+
+            leftHandAnimation.photonHandAnimation();
+            rightHandAnimation.photonHandAnimation();
         }
     }
 

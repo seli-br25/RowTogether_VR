@@ -20,6 +20,10 @@ Software:
 Listed are sources we used and every chatGPT prompt associated with Assignment3
 - https://www.youtube.com/watch?v=_QilKZ1f5Vo
 - https://www.youtube.com/watch?v=xRXOnuFji-Q
+- https://www.youtube.com/watch?v=RGb0_o691jo
+	- photon ipunobservable and sendrate + serializable rate
+- https://www.youtube.com/watch?v=vbeAuIH-4WA
+	- photon animation view
 - https://chatgpt.com/share/6744feed-f73c-8009-a953-46b2c6b72a67
 - https://assetstore.unity.com/packages/tools/lexic-a-procedural-name-generator-33221
 
