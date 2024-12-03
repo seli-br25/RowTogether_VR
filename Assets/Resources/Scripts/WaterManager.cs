@@ -16,7 +16,11 @@ public class WaterManager : MonoBehaviour
         if (PhotonNetwork.IsMasterClient)
         {
             PhotonView photonView = GetComponent<PhotonView>();
-            PhotonNetwork.AllocateRoomViewID(photonView);
+            if (photonView.ViewID == 0)
+            {
+                PhotonNetwork.AllocateRoomViewID(photonView);
+            }
+            
         }
     }
 

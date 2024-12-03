@@ -5,8 +5,7 @@ using ExitGames.Client.Photon;
 
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
-    private string roomPrefix = "Room ";
-    private int currentRoomIndex = 1;
+    private string roomSuffix = "'s Room";
 
     public bool DEBUG = false;
 
@@ -31,10 +30,14 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     // Deprecated, will only be triggered in scene 0 when connected to lobby
     public override void OnConnectedToMaster()
     {
-        Debug.Log("We are now connected to the " + PhotonNetwork.CloudRegion + " server!");
-        base.OnConnectedToMaster();
+        if (DEBUG)
+        {
+            Debug.Log("Recon due to left room...");
+            Debug.Log("We are now connected to the " + PhotonNetwork.CloudRegion + " server!");
+            base.OnConnectedToMaster();
 
-        TryJoinOrCreateRoom();
+            TryJoinOrCreateRoom();
+        }
     }
 
     // Deprecated, Room creation or joining managed by scene 0 in RoomManager
@@ -42,10 +45,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         Debug.Log("Trying to join or create room.");
         RoomOptions roomOps = new RoomOptions();
-        roomOps.MaxPlayers = 20;
+        roomOps.MaxPlayers = 6;
         roomOps.IsVisible = true;
         roomOps.IsOpen = true;
-        PhotonNetwork.JoinOrCreateRoom(roomPrefix + currentRoomIndex, roomOps, TypedLobby.Default);
+        roomOps.EmptyRoomTtl = 0;
+        PhotonNetwork.JoinOrCreateRoom(PhotonNetwork.NickName + roomSuffix, roomOps, TypedLobby.Default);
     }
 
     // Deprecated, Room initialization will be managed by scene 0 in RoomManager. will only be triggered by scene 0
@@ -86,13 +90,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     }
 
-    // Deprecated, will be managed by scene 0 in RoomManager.  will only be triggered by scene 0
-    public override void OnJoinRoomFailed(short returnCode, string message)
-    {
-        Debug.Log($"Failed to join room {roomPrefix}{currentRoomIndex}: {message}, trying to join next room...");
-        currentRoomIndex++;
-        //TryJoinOrCreateRoom();
-    }
+
 
     // Still useful for masterclient already in room. But implemented in NetworkPlayerSpawner
     public override void OnPlayerEnteredRoom(Player newPlayer)
@@ -101,4 +99,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         base.OnPlayerEnteredRoom(newPlayer);
     }
 
+    public override void OnLeftRoom()
+    {
+        Debug.Log("Room left, returning to Lobby");
+        PhotonNetwork.JoinLobby();
+        PhotonNetwork.LoadLevel(0);
+    }
 }

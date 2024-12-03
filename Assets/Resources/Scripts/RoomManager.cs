@@ -15,7 +15,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         base.OnJoinedLobby();
         //PhotonNetwork.JoinOrCreateRoom("test", null, null);
-        Debug.Log("Joined Room");
+        Debug.Log("Joined Lobby!");
     }
 
 
@@ -83,6 +83,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
             roomOps.MaxPlayers = 6;
             roomOps.IsVisible = true;
             roomOps.IsOpen = true;
+            roomOps.EmptyRoomTtl = 0;
             PhotonNetwork.CreateRoom(PhotonNetwork.NickName + roomSuffix, roomOps, TypedLobby.Default);
         } else
         {

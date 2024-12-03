@@ -15,7 +15,11 @@ public class RoomList : MonoBehaviourPunCallbacks
 
     private List<RoomInfo> cachedRoomList = new List<RoomInfo>();
 
-
+    public void RefreshRoomList()
+    {
+        cachedRoomList.Clear();
+        PhotonNetwork.JoinLobby();
+    }
 
     // Photon only provides list of rooms whose information has changed.
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
@@ -54,6 +58,7 @@ public class RoomList : MonoBehaviourPunCallbacks
                         {
                             newList[i] = room;
                         }
+                        
 
                         cachedRoomList = newList;
                     }

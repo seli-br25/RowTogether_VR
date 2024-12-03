@@ -7,13 +7,14 @@ using TMPro;
 public class HandUINetworkManager : MonoBehaviourPunCallbacks
 {
     public TextMeshProUGUI nameDisplay;
+    public GameObject handUi;
 
     public void LeaveRoom()
     {
         if (PhotonNetwork.InRoom)
         {
             PhotonNetwork.LeaveRoom();
-            Debug.Log("Leaving room.");
+            Debug.Log("Leaving " + PhotonNetwork.CurrentRoom.Name);
         }
     }
 
@@ -22,6 +23,7 @@ public class HandUINetworkManager : MonoBehaviourPunCallbacks
     void Start()
     {
         nameDisplay.text = PhotonNetwork.NickName;
+        handUi.SetActive(false);
     }
 
     // Update is called once per frame
