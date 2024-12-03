@@ -24,7 +24,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Dev Scenes/Photon Scene.unity
     guid: cad6fcb11eee6e2459dedaf701b7d4e0
   - enabled: 0
-    path: Assets/Scenes/GameScene.unity
+    path: Assets/Scenes/Dev Scenes/GameScene.unity
     guid: 1e56d186264bb41dcbe128c530b7dd75
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: aad2cd20c354315499ac832ff0dc0752, type: 2}
