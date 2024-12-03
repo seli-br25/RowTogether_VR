@@ -2,7 +2,6 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
-using System;
 
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
@@ -12,12 +11,16 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public bool DEBUG = false;
 
     // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
         if (DEBUG)
         {
             PhotonNetwork.ConnectUsingSettings();
+            PhotonNetwork.NickName = "Player " + Random.Range(0, 100);
         }
+    }
+    void Start()
+    {
         //Debug.Log("Try connect to server...");
         Debug.Log($"Scene Loaded, Photon network connection status: '{PhotonNetwork.IsConnected}'");
 

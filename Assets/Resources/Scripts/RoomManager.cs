@@ -76,17 +76,23 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     private void TryCreateRoom()
     {
-        Debug.Log("Trying to create room.");
-        RoomOptions roomOps = new RoomOptions();
-        roomOps.MaxPlayers = 6;
-        roomOps.IsVisible = true;
-        roomOps.IsOpen = true;
-        PhotonNetwork.CreateRoom(NameGenerator.generatedName + roomSuffix, roomOps, TypedLobby.Default);
+        if (PhotonNetwork.IsConnected && PhotonNetwork.NickName != "")
+        {
+            Debug.Log("Trying to create room.");
+            RoomOptions roomOps = new RoomOptions();
+            roomOps.MaxPlayers = 6;
+            roomOps.IsVisible = true;
+            roomOps.IsOpen = true;
+            PhotonNetwork.CreateRoom(PhotonNetwork.NickName + roomSuffix, roomOps, TypedLobby.Default);
+        } else
+        {
+            Debug.Log("NickName Not Set!");
+        }
     }
 
     public override void OnCreatedRoom()
     {
-        Debug.Log($"Room with name '{NameGenerator.generatedName + roomSuffix}' created, Master Client already joined the room.");
+        Debug.Log($"Room with name '{PhotonNetwork.NickName + roomSuffix}' created, Master Client already joined the room.");
     }
 
     public override void OnJoinRoomFailed(short returnCode, string message)

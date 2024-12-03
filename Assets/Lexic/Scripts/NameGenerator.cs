@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Photon.Pun;
 
 // Imported from Lexic Name Generator Asset from asset store.
 // Tweaked with help of GPT to accomodate multiple name classes at once.
@@ -72,6 +73,7 @@ namespace Lexic
         public void GenerateRandomName()
         {
             GetNextRandomName();
+            PhotonNetwork.NickName = generatedName;
         }
         public string GetNextRandomName()
         {
