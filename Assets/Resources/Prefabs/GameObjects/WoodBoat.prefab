@@ -386,7 +386,7 @@ MonoBehaviour:
   paddleCollider: {fileID: 309246792113151514}
   handleCollider: {fileID: 2629425346503265477}
   isLeftPaddle: 1
-  enableLog: 0
+  enableLog: 1
 --- !u!114 &2061258624287704803
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -878,7 +878,7 @@ MonoBehaviour:
   paddleCollider: {fileID: 4509744150314962549}
   handleCollider: {fileID: 5421402059476743579}
   isLeftPaddle: 0
-  enableLog: 0
+  enableLog: 1
 --- !u!114 &5155370223800805426
 MonoBehaviour:
   m_ObjectHideFlags: 0
