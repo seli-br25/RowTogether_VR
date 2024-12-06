@@ -16,7 +16,7 @@ MonoBehaviour:
     AppIdRealtime: 36e84dbf-c4e0-4c36-b3f9-62f933541d1b
     AppIdFusion: 
     AppIdChat: 
-    AppIdVoice: 
+    AppIdVoice: 4b4f331b-d7aa-4324-be3b-5697df968d62
     AppVersion: 
     UseNameServer: 1
     FixedRegion: 
@@ -34,17 +34,19 @@ MonoBehaviour:
   RunInBackground: 1
   StartInOfflineMode: 0
   RpcList:
+  - CantHearYou
+  - ChangeColour
   - ClickRpc
   - DestroyRpc
+  - HeresWhy
   - DestroySpaceship
   - Fire
-  - RespawnSpaceship
-  - StartCountdown
   - HandleFinish
-  - UpdateSeatAvailability
-  - SynchBoatObject
-  - SetShipID
+  - RespawnSpaceship
   - SeatedAsChild
+  - SetShipID
+  - StartCountdown
+  - UpdateSeatAvailability
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

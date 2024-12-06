@@ -25,6 +25,8 @@ public class PaddleBoatController : MonoBehaviour
     private Vector3 initialLocalPosition;
     private Quaternion initialLocalRotation;
 
+    public bool enableLog;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -89,7 +91,8 @@ public class PaddleBoatController : MonoBehaviour
         {
             inWater = true;
             //paddleRigidBody.isKinematic = false;
-            Debug.Log("Paddle is in water");
+            if (enableLog)
+                Debug.Log("Paddle is in water");
         }
     }
 
@@ -99,7 +102,8 @@ public class PaddleBoatController : MonoBehaviour
         {
             inWater = false;
             paddleRigidBody.isKinematic = true;
-            Debug.Log("Paddle outside of water");
+            if (enableLog)
+                Debug.Log("Paddle outside of water");
             lastPosition = Vector3.zero;
         }
     }

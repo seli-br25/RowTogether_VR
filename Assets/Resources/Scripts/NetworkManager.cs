@@ -49,7 +49,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         roomOps.IsVisible = true;
         roomOps.IsOpen = true;
         roomOps.EmptyRoomTtl = 0;
-        PhotonNetwork.JoinOrCreateRoom(PhotonNetwork.NickName + roomSuffix, roomOps, TypedLobby.Default);
+        PhotonNetwork.JoinOrCreateRoom("Test " + roomSuffix, roomOps, TypedLobby.Default);
     }
 
     // Deprecated, Room initialization will be managed by scene 0 in RoomManager. will only be triggered by scene 0

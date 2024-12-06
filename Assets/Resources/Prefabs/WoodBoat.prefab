@@ -386,6 +386,7 @@ MonoBehaviour:
   paddleCollider: {fileID: 309246792113151514}
   handleCollider: {fileID: 2629425346503265477}
   isLeftPaddle: 1
+  enableLog: 0
 --- !u!114 &2061258624287704803
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -877,6 +878,7 @@ MonoBehaviour:
   paddleCollider: {fileID: 4509744150314962549}
   handleCollider: {fileID: 5421402059476743579}
   isLeftPaddle: 0
+  enableLog: 0
 --- !u!114 &5155370223800805426
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1266,7 +1268,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5ed45394bd06a7429d72c3f3b5d86db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  body: {fileID: 0}
+  body: {fileID: 2818298389355605741}
 --- !u!114 &5269899726843536055
 MonoBehaviour:
   m_ObjectHideFlags: 0
