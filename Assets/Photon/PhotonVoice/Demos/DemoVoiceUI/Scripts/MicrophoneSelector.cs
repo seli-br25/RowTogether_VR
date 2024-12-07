@@ -5,6 +5,7 @@
     using UnityEngine.Events;
     using UnityEngine.Serialization;
     using UnityEngine.UI;
+    using TMPro;
 
     public enum MicType
     {
@@ -41,8 +42,13 @@
         private List<MicRef> micOptions;
 
 #pragma warning disable 649
-        [SerializeField]
+        //Changed generic text UI to textmeshpro ui
+        //[SerializeField]
         private Dropdown micDropdown;
+
+        [SerializeField]
+        private TMP_Dropdown tmpMicDropdown;
+
         [SerializeField]
         private Slider micLevelSlider;
 
@@ -80,7 +86,8 @@
             photonMicEnum = Platform.CreateAudioInEnumerator(this.Logger);
             photonMicEnum.OnReady = () => // refreshes asynchronously on WebGL
             {
-                this.SetupMicDropdown();
+                //this.SetupMicDropdown();
+                this.SetupTmpMicDropdown();
                 this.SetCurrentValue();
             };
             this.refreshButton.GetComponentInChildren<Button>().onClick.AddListener(RefreshMicrophones);
@@ -112,6 +119,45 @@
         private void OnDisable()
         {
             UtilityScripts.MicrophonePermission.MicrophonePermissionCallback -= this.OnMicrophonePermissionCallback;
+        }
+
+        private void SetupTmpMicDropdown()
+        {
+            this.tmpMicDropdown.ClearOptions();
+
+            this.micOptions = new List<MicRef>();
+            List<string> micOptionsStrings = new List<string>();
+
+            // using non-breaking spaces in menu items to avoid loosing text after the break
+            this.micOptions.Add(new MicRef(MicType.Unity, DeviceInfo.Default));
+            micOptionsStrings.Add(string.Format("[Unity]\u00A0[Default]"));
+
+            foreach (var d in this.unityMicEnum)
+            {
+                this.micOptions.Add(new MicRef(MicType.Unity, d));
+                micOptionsStrings.Add(string.Format("[Unity]\u00A0{0}", d));
+            }
+
+            this.micOptions.Add(new MicRef(MicType.Photon, DeviceInfo.Default));
+            micOptionsStrings.Add(string.Format("[Photon]\u00A0[Default]"));
+
+            foreach (var d in this.photonMicEnum)
+            {
+                this.micOptions.Add(new MicRef(MicType.Photon, d));
+                micOptionsStrings.Add(string.Format("[Photon]\u00A0{0}", d));
+            }
+
+#if PHOTON_VOICE_FMOD_ENABLE
+            foreach (var d in this.fmodMicEnum)
+            {
+                this.micOptions.Add(new MicRef(MicType.FMOD, d));
+                micOptionsStrings.Add(string.Format("[FMOD]\u00A0{0}", d));
+            }
+#endif
+
+            this.tmpMicDropdown.AddOptions(micOptionsStrings);
+            this.tmpMicDropdown.onValueChanged.RemoveAllListeners();
+            this.tmpMicDropdown.onValueChanged.AddListener((x) => this.SwitchToSelectedMic());
         }
 
         private void SetupMicDropdown()
@@ -155,7 +201,8 @@
 
         public void SwitchToSelectedMic()
         {
-            MicRef mic = this.micOptions[this.micDropdown.value];
+            //MicRef mic = this.micOptions[this.micDropdown.value];
+            MicRef mic = this.micOptions[this.tmpMicDropdown.value];
             switch (mic.MicType)
             {
                 case MicType.Unity:
@@ -187,7 +234,8 @@
                 Debug.LogWarning("micOptions list is null");
                 return;
             }
-            this.micDropdown.gameObject.SetActive(true);
+            //this.micDropdown.gameObject.SetActive(true);
+            this.tmpMicDropdown.gameObject.SetActive(true);
             this.refreshButton.SetActive(true);
             for (int valueIndex = 0; valueIndex < this.micOptions.Count; valueIndex++)
             {
@@ -199,7 +247,8 @@
 #endif
                     )
                 {
-                    this.micDropdown.value = valueIndex;
+                    //this.micDropdown.value = valueIndex;
+                    this.tmpMicDropdown.value = valueIndex;
                     return;
                 }
             }
