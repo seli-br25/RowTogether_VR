@@ -5239,6 +5239,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1621877602}
     m_Modifications:
+    - target: {fileID: 64062144142584872, guid: c00ecfa9e008e304ca87beda15e69f43, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1567778426036168570, guid: c00ecfa9e008e304ca87beda15e69f43, type: 3}
       propertyPath: m_Name
       value: Rock11
@@ -6858,7 +6862,7 @@ BoxCollider:
   m_GameObject: {fileID: 2132636185}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 2.3240635, y: 2.121073, z: 0.8537456}
   m_Center: {x: -0.04181218, y: 0.9757117, z: -0.04156907}

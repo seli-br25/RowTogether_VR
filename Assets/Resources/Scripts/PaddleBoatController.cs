@@ -5,6 +5,8 @@ using Photon.Pun;
 
 public class PaddleBoatController : MonoBehaviour
 {
+    private PhotonView photonView;
+
     public float forceMultiplier = 2f;
     public float torqueMultiplier = 10f;
 
@@ -31,6 +33,7 @@ public class PaddleBoatController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        photonView = GetComponent<PhotonView>();
         initialLocalPosition = transform.localPosition;
         initialLocalRotation = transform.localRotation;
         lastPosition = Vector3.zero;
@@ -120,5 +123,10 @@ public class PaddleBoatController : MonoBehaviour
             inWater = false;
             lastPosition = Vector3.zero;
         }
+    }
+
+    public void RequestOwnership()
+    {
+        photonView.RequestOwnership();
     }
 }
