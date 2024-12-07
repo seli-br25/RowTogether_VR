@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 
 public class GameplayManager : MonoBehaviour
 {
@@ -15,11 +16,24 @@ public class GameplayManager : MonoBehaviour
     private PaddleBoatController paddleControllerRight;
     private float initialForceMultiplier;
 
+    public GameObject heartUI1;
+    public GameObject heartUI2;
+    public GameObject heartUI3;
+    private List<GameObject> heartUIs;
+    public Material deactivatedMaterial;
+    private Material activatedMaterial;
+
     private void Start()
     {
         paddleControllerLeft = paddleLeft.GetComponent<PaddleBoatController>();
         paddleControllerRight = paddleRight.GetComponent<PaddleBoatController>();
         initialForceMultiplier = paddleControllerLeft.forceMultiplier;
+
+        heartUIs = new List<GameObject>();
+        heartUIs.Add(heartUI1);
+        heartUIs.Add(heartUI2);
+        heartUIs.Add(heartUI3);
+        activatedMaterial = heartUI1.GetComponent<MeshRenderer>().materials[0];
         UpdateLivesUI();
     }
 
@@ -88,13 +102,26 @@ public class GameplayManager : MonoBehaviour
     {
         Debug.Log("Game Over!");
         // TODO: implement game over
-        Time.timeScale = 0f;
     }
 
     private void UpdateLivesUI()
     {
         Debug.Log("Lives: " + lives);
-        // TODO: add UI for showing lives
+        for (int i = 0; i < heartUIs.Count; i++)
+        {
+            MeshRenderer renderer = heartUIs[i].GetComponent<MeshRenderer>();
+            Material[] materials = renderer.materials;
+            if (i < lives)
+            {
+                materials[0] = activatedMaterial;
+            }
+            else
+            {
+                materials[0] = deactivatedMaterial;
+            }
+            renderer.materials = materials;
+        }
+                   
     }
 
     private void UpdateTimerUI()

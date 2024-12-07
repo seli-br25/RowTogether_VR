@@ -91,9 +91,6 @@ public class PaddleBoatController : MonoBehaviour
         if (other.tag.Equals("Water"))
         {
             inWater = true;
-            //paddleRigidBody.isKinematic = false;
-            if (enableLog)
-                Debug.Log("Paddle is in water");
         }
     }
 
@@ -103,8 +100,6 @@ public class PaddleBoatController : MonoBehaviour
         {
             inWater = false;
             paddleRigidBody.isKinematic = true;
-            if (enableLog)
-                Debug.Log("Paddle outside of water");
             lastPosition = Vector3.zero;
         }
     }
