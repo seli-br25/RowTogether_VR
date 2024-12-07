@@ -26,6 +26,7 @@ public class PaddleBoatController : MonoBehaviour
     private Quaternion initialLocalRotation;
 
     public bool enableLog;
+    private int grabCount = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -108,11 +109,21 @@ public class PaddleBoatController : MonoBehaviour
         }
     }
 
+    public void OnPaddleGrab()
+    {
+        grabCount++;
+    }
+
     public void OnPaddleRelease()
     {
-        transform.localPosition = initialLocalPosition;
-        transform.localRotation = initialLocalRotation;
-        inWater = false;
-        lastPosition = Vector3.zero;
+        grabCount--;
+
+        if (grabCount <= 0)
+        {
+            transform.localPosition = initialLocalPosition;
+            transform.localRotation = initialLocalRotation;
+            inWater = false;
+            lastPosition = Vector3.zero;
+        }
     }
 }
