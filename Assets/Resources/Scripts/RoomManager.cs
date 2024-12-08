@@ -84,6 +84,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
             roomOps.IsVisible = true;
             roomOps.IsOpen = true;
             roomOps.EmptyRoomTtl = 0;
+            roomOps.PlayerTtl = 0;
             PhotonNetwork.CreateRoom(PhotonNetwork.NickName + roomSuffix, roomOps, TypedLobby.Default);
         } else
         {

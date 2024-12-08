@@ -2,6 +2,8 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
+using Photon.Voice.PUN;
+
 
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
@@ -101,8 +103,26 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnLeftRoom()
     {
+        PunVoiceClient.Instance.Client.OpLeaveRoom(false);
+        PunVoiceClient.Instance.Disconnect();
+
+        StartCoroutine(DestroyPunVoiceClientAfterDisconnect());
+
         Debug.Log("Room left, returning to Lobby");
         PhotonNetwork.JoinLobby();
         PhotonNetwork.LoadLevel(0);
+    }
+
+    System.Collections.IEnumerator DestroyPunVoiceClientAfterDisconnect()
+    {
+        // Wait until the client is fully disconnected
+        while (PunVoiceClient.Instance.ClientState != Photon.Realtime.ClientState.Disconnected)
+        {
+            yield return null; // Wait for the next frame
+        }
+
+        // Safely destroy the PunVoiceClient GameObject
+        Destroy(PunVoiceClient.Instance.gameObject);
+        Debug.Log("PunVoiceClient destroyed after disconnect.");
     }
 }

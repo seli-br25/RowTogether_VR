@@ -13,7 +13,7 @@ public class HandUINetworkManager : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.InRoom)
         {
-            PhotonNetwork.LeaveRoom();
+            PhotonNetwork.LeaveRoom(false);
             Debug.Log("Leaving " + PhotonNetwork.CurrentRoom.Name);
         }
     }
