@@ -47,5 +47,20 @@ Listed are sources we used and every chatGPT prompt associated with Assignment3
 	- The only solution found for keeping the parent child hirarchy for robust transform synch while allowing grabbing and synching with paddles own photon view \(meaning nested networked object\) is to change the grabable movement type from kinematic/velocity to instanteneous
 		- The implications of that change means: no collision of the paddle with other game objects possible
 
-
+- Different Methods implemented for onNewPlayer joined room synchronization:
+	- RpcTarget.Others
+		- Sync triggered by something.
+		- Good for sync with all players currently in room.
+		- Bad for new players joining
+		- Issue: timing related if rpc call on PlayerEnteredRoom, as new players still missing photonNetwork initialization
+	- RpcTarget.AllBuffered
+		- Good to replay all buffered rpc calls to new players.
+		- Issue: timing related, same as above, if master client dced, loses all buffers
+	- CustomRoomProperties:
+		- Define gamestate in room properties. On player join, manually fetch room properties and manually set settings accordingly
+		- Good agains timing issues, as self managed
+		- Issue: A lot of hassle and delay in room prop update
+	- RPC Request to master for sync
+		- After joining and Network initialization finished, make RPC call RpcTarget.MasterClient with params Player PhotonNetwork.LocalPlayer, to issue master client rpc to new target player
+		- Master client then syncs his game state directly with the new player.
 # Changelog
