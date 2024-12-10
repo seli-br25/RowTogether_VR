@@ -274,10 +274,10 @@ GameObject:
   - component: {fileID: 3425176848846305181}
   - component: {fileID: 3958681720167452006}
   - component: {fileID: 570274650214307450}
-  - component: {fileID: 7505545420786429781}
-  - component: {fileID: 2061258624287704803}
-  - component: {fileID: 5580443853637156120}
   - component: {fileID: 4269237039571055529}
+  - component: {fileID: 7505545420786429781}
+  - component: {fileID: 1209581885574110532}
+  - component: {fileID: 5580443853637156120}
   - component: {fileID: 3771168483889050336}
   m_Layer: 0
   m_Name: Paddle_Left
@@ -369,6 +369,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 64
   m_CollisionDetection: 2
+--- !u!65 &4269237039571055529
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3433041524522613087}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.17052725, y: 0.022233617, z: 1.3235595}
+  m_Center: {x: 0, y: 0, z: -0.66177976}
 --- !u!114 &7505545420786429781
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -388,7 +401,7 @@ MonoBehaviour:
   handleCollider: {fileID: 2629425346503265477}
   isLeftPaddle: 1
   enableLog: 1
---- !u!114 &2061258624287704803
+--- !u!114 &1209581885574110532
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -397,7 +410,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3433041524522613087}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ad34abafad169848a38072baa96cdb2, type: 3}
+  m_Script: {fileID: 11500000, guid: 22b17bcc2cbd0cc43a0f7c1236de29cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_InteractionManager: {fileID: 0}
@@ -440,9 +453,9 @@ MonoBehaviour:
   m_SelectEntered:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7505545420786429781}
-        m_TargetAssemblyTypeName: PaddleBoatController, Assembly-CSharp
-        m_MethodName: OnPaddleGrab
+      - m_Target: {fileID: 5580443853637156120}
+        m_TargetAssemblyTypeName: Photon.Pun.PhotonView, PhotonUnityNetworking
+        m_MethodName: RequestOwnership
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -452,9 +465,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 5580443853637156120}
-        m_TargetAssemblyTypeName: Photon.Pun.PhotonView, PhotonUnityNetworking
-        m_MethodName: RequestOwnership
+      - m_Target: {fileID: 7505545420786429781}
+        m_TargetAssemblyTypeName: PaddleBoatController, Assembly-CSharp
+        m_MethodName: OnPaddleGrab
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -535,7 +548,7 @@ MonoBehaviour:
   m_SnapToColliderVolume: 1
   m_ReinitializeDynamicAttachEverySingleGrab: 1
   m_AttachEaseInTime: 0.15
-  m_MovementType: 1
+  m_MovementType: 2
   m_VelocityDamping: 1
   m_VelocityScale: 1
   m_AngularVelocityDamping: 1
@@ -548,7 +561,7 @@ MonoBehaviour:
   m_SmoothRotation: 0
   m_SmoothRotationAmount: 8
   m_TightenRotation: 0.1
-  m_TrackScale: 1
+  m_TrackScale: 0
   m_SmoothScale: 0
   m_SmoothScaleAmount: 8
   m_TightenScale: 0.1
@@ -577,6 +590,8 @@ MonoBehaviour:
   m_StartingSingleGrabTransformers: []
   m_StartingMultipleGrabTransformers: []
   m_AddDefaultGrabTransformers: 1
+  originalSceneParent: {fileID: 7476816626250338024}
+  m_ChangeTransformParent: 0
 --- !u!114 &5580443853637156120
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -592,27 +607,14 @@ MonoBehaviour:
   ObservedComponentsFoldoutOpen: 1
   Group: 0
   prefixField: -1
-  Synchronization: 2
+  Synchronization: 1
   OwnershipTransfer: 1
-  observableSearch: 2
+  observableSearch: 0
   ObservedComponents:
   - {fileID: 3771168483889050336}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!65 &4269237039571055529
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3433041524522613087}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.17052725, y: 0.022233617, z: 1.3235595}
-  m_Center: {x: 0, y: 0, z: -0.66177976}
 --- !u!114 &3771168483889050336
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -628,7 +630,7 @@ MonoBehaviour:
   m_SynchronizePosition: 1
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
-  m_UseLocal: 0
+  m_UseLocal: 1
 --- !u!1 &3504867364331005853
 GameObject:
   m_ObjectHideFlags: 0
@@ -910,13 +912,12 @@ GameObject:
   - component: {fileID: 2893248839365938228}
   - component: {fileID: 7624054664372119964}
   - component: {fileID: 6747886110460378950}
+  - component: {fileID: 5669105294220722157}
   - component: {fileID: 9166393455705802683}
   - component: {fileID: 3560238261903293170}
-  - component: {fileID: 5155370223800805426}
-  - component: {fileID: 9145190299058462088}
+  - component: {fileID: 7154697234764750755}
   - component: {fileID: 1179386568675685661}
-  - component: {fileID: 5669105294220722157}
-  - component: {fileID: 914118573534833324}
+  - component: {fileID: 1374100259867606136}
   m_Layer: 0
   m_Name: Paddle_Right
   m_TagString: Untagged
@@ -991,6 +992,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &5669105294220722157
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7021600674944215932}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.17052723, y: 0.022233617, z: 1.3235595}
+  m_Center: {x: 0, y: 0, z: -0.6617797}
 --- !u!54 &9166393455705802683
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1026,7 +1040,7 @@ MonoBehaviour:
   handleCollider: {fileID: 5421402059476743579}
   isLeftPaddle: 0
   enableLog: 1
---- !u!114 &5155370223800805426
+--- !u!114 &7154697234764750755
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1035,7 +1049,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7021600674944215932}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ad34abafad169848a38072baa96cdb2, type: 3}
+  m_Script: {fileID: 11500000, guid: 22b17bcc2cbd0cc43a0f7c1236de29cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_InteractionManager: {fileID: 0}
@@ -1078,9 +1092,9 @@ MonoBehaviour:
   m_SelectEntered:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3560238261903293170}
-        m_TargetAssemblyTypeName: PaddleBoatController, Assembly-CSharp
-        m_MethodName: OnPaddleGrab
+      - m_Target: {fileID: 1179386568675685661}
+        m_TargetAssemblyTypeName: Photon.Pun.PhotonView, PhotonUnityNetworking
+        m_MethodName: RequestOwnership
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1090,9 +1104,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1179386568675685661}
-        m_TargetAssemblyTypeName: Photon.Pun.PhotonView, PhotonUnityNetworking
-        m_MethodName: RequestOwnership
+      - m_Target: {fileID: 3560238261903293170}
+        m_TargetAssemblyTypeName: PaddleBoatController, Assembly-CSharp
+        m_MethodName: OnPaddleGrab
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1173,7 +1187,7 @@ MonoBehaviour:
   m_SnapToColliderVolume: 1
   m_ReinitializeDynamicAttachEverySingleGrab: 1
   m_AttachEaseInTime: 0.15
-  m_MovementType: 1
+  m_MovementType: 2
   m_VelocityDamping: 1
   m_VelocityScale: 1
   m_AngularVelocityDamping: 1
@@ -1186,7 +1200,7 @@ MonoBehaviour:
   m_SmoothRotation: 0
   m_SmoothRotationAmount: 8
   m_TightenRotation: 0.1
-  m_TrackScale: 1
+  m_TrackScale: 0
   m_SmoothScale: 0
   m_SmoothScaleAmount: 8
   m_TightenScale: 0.1
@@ -1215,19 +1229,8 @@ MonoBehaviour:
   m_StartingSingleGrabTransformers: []
   m_StartingMultipleGrabTransformers: []
   m_AddDefaultGrabTransformers: 1
---- !u!65 &9145190299058462088
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7021600674944215932}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.17052725, y: 0.022233617, z: 0.3}
-  m_Center: {x: 0, y: 0, z: -1.17}
+  originalSceneParent: {fileID: 7476816626250338024}
+  m_ChangeTransformParent: 0
 --- !u!114 &1179386568675685661
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1243,28 +1246,15 @@ MonoBehaviour:
   ObservedComponentsFoldoutOpen: 1
   Group: 0
   prefixField: -1
-  Synchronization: 2
+  Synchronization: 1
   OwnershipTransfer: 1
-  observableSearch: 2
+  observableSearch: 0
   ObservedComponents:
-  - {fileID: 914118573534833324}
+  - {fileID: 1374100259867606136}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!65 &5669105294220722157
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7021600674944215932}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.17052723, y: 0.022233617, z: 1.3235595}
-  m_Center: {x: 0, y: 0, z: -0.6617797}
---- !u!114 &914118573534833324
+--- !u!114 &1374100259867606136
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1279,7 +1269,7 @@ MonoBehaviour:
   m_SynchronizePosition: 1
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
-  m_UseLocal: 0
+  m_UseLocal: 1
 --- !u!1 &7476816626250502856
 GameObject:
   m_ObjectHideFlags: 0
@@ -1443,7 +1433,7 @@ MonoBehaviour:
   prefixField: -1
   Synchronization: 2
   OwnershipTransfer: 0
-  observableSearch: 2
+  observableSearch: 0
   ObservedComponents:
   - {fileID: 5269899726843536055}
   sceneViewId: 0
