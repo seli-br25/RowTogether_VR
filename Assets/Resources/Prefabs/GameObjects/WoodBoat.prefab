@@ -401,6 +401,7 @@ MonoBehaviour:
   handleCollider: {fileID: 2629425346503265477}
   isLeftPaddle: 1
   enableLog: 1
+  enableMovement: 0
 --- !u!114 &1209581885574110532
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1040,6 +1041,7 @@ MonoBehaviour:
   handleCollider: {fileID: 5421402059476743579}
   isLeftPaddle: 0
   enableLog: 1
+  enableMovement: 0
 --- !u!114 &7154697234764750755
 MonoBehaviour:
   m_ObjectHideFlags: 0

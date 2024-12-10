@@ -20,6 +20,7 @@ public class NetworkPlayerSpawner : MonoBehaviourPunCallbacks
     private GameObject startingShipLocation;
     [SerializeField]
     private GameObject XROrigin;
+    [SerializeField] private UIManager uiManager;
 
     private int previousMasterClientActorNr;
 
@@ -173,6 +174,7 @@ public class NetworkPlayerSpawner : MonoBehaviourPunCallbacks
         {
             spawnedShip = PhotonNetwork.InstantiateRoomObject(pathToPrefabs + spawnedShipPrefab.name, startingShipLocation.transform.position, startingShipLocation.transform.rotation);
             spawnedShip.GetPhotonView().RPC("SetShipID", RpcTarget.MasterClient);
+            uiManager.SetTargetObject(spawnedShip);
         } else
         {
             int id = (int)PhotonNetwork.CurrentRoom.CustomProperties["ShipID"];
