@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 
 public class GameplayManager : MonoBehaviour
 {
@@ -23,8 +24,11 @@ public class GameplayManager : MonoBehaviour
     public Material deactivatedMaterial;
     private Material activatedMaterial;
 
+    private PhotonView photonView;
+
     private void Start()
     {
+        photonView = GetComponent<PhotonView>();
         paddleControllerLeft = paddleLeft.GetComponent<PaddleBoatController>();
         paddleControllerRight = paddleRight.GetComponent<PaddleBoatController>();
         initialForceMultiplier = paddleControllerLeft.forceMultiplier;
@@ -45,12 +49,18 @@ public class GameplayManager : MonoBehaviour
             UpdateTimerUI();
         }
     }
-
+    // because non master clients have their boats set to kinematic and transforms synced via photon transform view, collisions are disabled for them until they become master clients
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Obstacle") && !isImmune)
         {
             LoseLife();
+
+            if (photonView != null && photonView.IsMine)
+            {
+                photonView.RPC("SynchronizeLoseLife", RpcTarget.Others);
+            }
+
         }
     }
 
@@ -59,6 +69,12 @@ public class GameplayManager : MonoBehaviour
         if (other.CompareTag("HeartItem"))
         {
             GainLife();
+
+            if (photonView != null && photonView.IsMine)
+            {
+                photonView.RPC("SynchronizeGainLife", RpcTarget.Others);
+            }
+            
             other.gameObject.SetActive(false);
         } else  if (other.CompareTag("SpeedTrap"))
         {
@@ -74,7 +90,7 @@ public class GameplayManager : MonoBehaviour
         }
     }
 
-    private void LoseLife()
+    public void LoseLife()
     {
         lives--;
         UpdateLivesUI();
@@ -89,7 +105,7 @@ public class GameplayManager : MonoBehaviour
         }
     }
 
-    private void GainLife()
+    public void GainLife()
     {
         if (lives < 3)
         {
@@ -100,11 +116,19 @@ public class GameplayManager : MonoBehaviour
 
     private void GameOver()
     {
-        Debug.Log("Game Over!");
-        // TODO: implement game over
+        // only invoke game over if this boats photonview is mine (masterclients)
+        // for non master clients, game over is synched through master client for safer approach agains desync
+        if (photonView != null && photonView.IsMine)
+        {
+            Debug.Log("Game Over!");
+
+            // Maybe just disable all floaters so the boat sinks down, but the view when sunk is empty/ transparent ...
+            // TODO: implement game over
+        }
+
     }
 
-    private void UpdateLivesUI()
+    public void UpdateLivesUI()
     {
         Debug.Log("Lives: " + lives);
         for (int i = 0; i < heartUIs.Count; i++)

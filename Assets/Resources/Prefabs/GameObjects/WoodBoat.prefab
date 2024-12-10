@@ -1452,6 +1452,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   body: {fileID: 2818298389355605741}
+  boatGameplay: {fileID: 667170692737159560}
 --- !u!114 &5269899726843536055
 MonoBehaviour:
   m_ObjectHideFlags: 0

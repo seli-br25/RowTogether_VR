@@ -28,7 +28,7 @@ public class NetworkPlayerSpawner : MonoBehaviourPunCallbacks
     {
         base.OnPlayerEnteredRoom(newPlayer);
 
-        Debug.Log("Entered");
+        Debug.Log("Player: " + newPlayer.NickName + " entered the room");
         // synchronize the ship gameobject with everyone
         if (PhotonNetwork.IsMasterClient)
         {
@@ -84,7 +84,6 @@ public class NetworkPlayerSpawner : MonoBehaviourPunCallbacks
 
         spawnedPlayer = PhotonNetwork.Instantiate(pathToPrefabs + spawnedPlayerPrefab.name, XROrigin.transform.position, XROrigin.transform.rotation);
 
-
         // first move all already joined photons to correct seating
         if (leftSeat > 0)
         {
@@ -103,7 +102,9 @@ public class NetworkPlayerSpawner : MonoBehaviourPunCallbacks
         // TODO assign all ghosts to ghost spot
 
         // after all photons correctly synched, join 1 seat if open
-
+        
+        
+        // TODO: retrieve boat hp from room prop 
 
         // empty 
         // set the xrorigin as child, synchronize this to all connected clients, update the seat availability
@@ -177,6 +178,7 @@ public class NetworkPlayerSpawner : MonoBehaviourPunCallbacks
             int id = (int)PhotonNetwork.CurrentRoom.CustomProperties["ShipID"];
             PhotonView shipPhotonView = PhotonView.Find(id);
             spawnedShip = shipPhotonView?.gameObject;
+            shipPhotonView.RPC("TriggerBoatSync", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer);
         }
 
     }

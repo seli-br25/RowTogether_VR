@@ -97,7 +97,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     // Still useful for masterclient already in room. But implemented in NetworkPlayerSpawner
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        Debug.Log("A new player joined the room");
+        //Debug.Log("A new player joined the room");
         base.OnPlayerEnteredRoom(newPlayer);
     }
 

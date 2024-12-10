@@ -7,6 +7,8 @@ using Photon.Realtime;
 public class BoatManager : MonoBehaviourPunCallbacks
 {
     public Rigidbody body;
+    [SerializeField]
+    private GameplayManager boatGameplay;
 
     public void Start()
     {
@@ -48,6 +50,45 @@ public class BoatManager : MonoBehaviourPunCallbacks
         rightSeat = (int)PhotonNetwork.CurrentRoom.CustomProperties["RightFree"];
 
         Debug.Log($"Current leftSeat {leftSeat}, rightSeat {rightSeat}");
+    }
+
+
+    // On new player spawned, they will request from the master client to have master client rpc synch the boat status. 
+    [PunRPC]
+    public void TriggerBoatSync(Player targetPlayer)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            photonView.RPC("SynchronizeLives", targetPlayer, boatGameplay.lives);
+            Debug.Log("MasterClient attempting to sync boat status");
+        }
+    }
+
+    [PunRPC]
+    public void SynchronizeGainLife()
+    {
+        boatGameplay.GainLife();
+    }
+
+    [PunRPC]
+    public void SynchronizeLoseLife()
+    {
+        boatGameplay.LoseLife();
+    }
+
+    
+
+    // Only synch on non master clients
+    [PunRPC]
+    public void SynchronizeLives(int currentLives)
+    {
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            boatGameplay.lives = currentLives;
+            boatGameplay.UpdateLivesUI();
+        }
+
+        Debug.Log("Current boat status from master synchronized");
     }
 
     // the playerViewId is used to store the spawned and synched photonview of the player rig. helps synchronize which photonview is currently sitting in the boat
