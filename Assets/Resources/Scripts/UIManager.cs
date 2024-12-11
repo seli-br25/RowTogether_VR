@@ -14,16 +14,22 @@ public class UIManager : MonoBehaviourPunCallbacks
     private bool wasMasterClient;
     private GameObject boat;
     private Rigidbody boatRigidbody;
-    private Collider boatCollider;
+    private GameplayManager gameplayManager;
+    public Button handMenuRestartButton;
 
     private void Start()
+    {
+        showStartScreen();
+    }
+
+    private void showStartScreen()
     {
         if (PhotonNetwork.IsMasterClient)
         {
             startGameButton.gameObject.SetActive(true);
             textMesh.text = "You are the Master-Client! Click on the button to start the game";
             startGameButton.onClick.AddListener(StartGame);
-            wasMasterClient = true; 
+            wasMasterClient = true;
         }
         else
         {
@@ -31,6 +37,14 @@ public class UIManager : MonoBehaviourPunCallbacks
             textMesh.text = "Wait for Master-Client to start the game";
             wasMasterClient = false;
         }
+    }
+
+    public void ResetUI()
+    {
+        exitButton.gameObject.SetActive(false);
+        restartButton.gameObject.SetActive(false);
+        showStartScreen();
+        boatRigidbody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationX;
     }
 
     private void Update()
@@ -50,6 +64,9 @@ public class UIManager : MonoBehaviourPunCallbacks
         boat = obj;
         boatRigidbody = boat.GetComponent<Rigidbody>();
         boatRigidbody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationX;
+        gameplayManager = boat.GetComponent<GameplayManager>();
+        restartButton.onClick.AddListener(gameplayManager.ResetGame);
+        handMenuRestartButton.onClick.AddListener(gameplayManager.ResetGame);
     }
 
     public void StartGame()
@@ -100,7 +117,11 @@ public class UIManager : MonoBehaviourPunCallbacks
     public void setGameOverUI()
     {
         textMesh.text = "Your boat is broken! \nGAME OVER";
+        if (PhotonNetwork.IsMasterClient)
+        {
+            restartButton.gameObject.SetActive(true);
+        }
         exitButton.gameObject.SetActive(true);
-        restartButton.gameObject.SetActive(true);
+        
     }
 }

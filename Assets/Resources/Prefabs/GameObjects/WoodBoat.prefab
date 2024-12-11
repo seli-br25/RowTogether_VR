@@ -1416,7 +1416,6 @@ MonoBehaviour:
   heartUI2: {fileID: 4647812568476265358}
   heartUI3: {fileID: 8495138030781793628}
   deactivatedMaterial: {fileID: 2100000, guid: e09b04930918e42829f54cc5189c21bb, type: 2}
-  uiManager: {fileID: 0}
   floater1: {fileID: 2818298389583375958}
   floater2: {fileID: 2818298390917900378}
   floater3: {fileID: 2818298391180660553}

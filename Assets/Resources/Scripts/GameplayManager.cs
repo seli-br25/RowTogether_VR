@@ -25,11 +25,17 @@ public class GameplayManager : MonoBehaviour
     private Material activatedMaterial;
 
     private PhotonView photonView;
-    public UIManager uiManager;
+    private UIManager uiManager;
     public Floater floater1;
     public Floater floater2;
     public Floater floater3;
     public Floater floater4;
+
+    private Vector3 initialPosition;
+    private Quaternion initialRotation;
+    private float initialFloaterDepthBeforeSubmerge;
+    private GameObject heartItem1;
+    private GameObject heartItem2;
 
     private void Start()
     {
@@ -46,6 +52,11 @@ public class GameplayManager : MonoBehaviour
         UpdateLivesUI();
 
         uiManager = transform.Find("Seats/Left Seat/XR Origin (XR Rig)").GetComponent<UIManager>();
+        initialPosition = this.transform.position;
+        initialRotation = this.transform.rotation;
+        heartItem1 = GameObject.Find("Heart_Up1");
+        heartItem2 = GameObject.Find("Heart_Up2");
+        initialFloaterDepthBeforeSubmerge = floater1.depthBeforeSubmerged;
     }
 
     private void Update()
@@ -180,5 +191,21 @@ public class GameplayManager : MonoBehaviour
         }
 
         boatRenderer.enabled = true;
+    }
+
+    public void ResetGame()
+    {
+        this.transform.position = initialPosition;
+        this.transform.rotation = initialRotation;
+        lives = 3;
+        UpdateLivesUI();
+        gameTimer = 0f;
+        uiManager.ResetUI();
+        heartItem1.SetActive(true);
+        heartItem2.SetActive(true);
+        floater1.depthBeforeSubmerged = initialFloaterDepthBeforeSubmerge;
+        floater2.depthBeforeSubmerged = initialFloaterDepthBeforeSubmerge;
+        floater3.depthBeforeSubmerged = initialFloaterDepthBeforeSubmerge;
+        floater4.depthBeforeSubmerged = initialFloaterDepthBeforeSubmerge;
     }
 }
