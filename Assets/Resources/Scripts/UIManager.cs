@@ -39,6 +39,7 @@ public class UIManager : MonoBehaviourPunCallbacks
         }
     }
 
+    [PunRPC]
     public void ResetUI()
     {
         exitButton.gameObject.SetActive(false);
@@ -78,14 +79,17 @@ public class UIManager : MonoBehaviourPunCallbacks
         }
     }
 
-    [PunRPC]
-    public void setGoalUI(float endTime)
+    public void SetGoalUI(float endTime)
     {
         int minutes = Mathf.FloorToInt(endTime / 60F);
         int seconds = Mathf.FloorToInt(endTime % 60F);
 
         textMesh.text = string.Format("You reached the Goal! CONGRATS!\nYour time: {0:00}:{1:00}", minutes, seconds);
-        restartButton.gameObject.SetActive(true);
+        if (PhotonNetwork.IsMasterClient)
+        {
+            // only Masterclient can restart
+            restartButton.gameObject.SetActive(true);
+        }
         exitButton.gameObject.SetActive(true);
     }
 
@@ -107,18 +111,23 @@ public class UIManager : MonoBehaviourPunCallbacks
         yield return new WaitForSeconds(1);
 
         textMesh.text = "Go!";
-        boatRigidbody.constraints = RigidbodyConstraints.None;
+        if (PhotonNetwork.IsMasterClient)
+        {
+            boatRigidbody = transform.parent.parent.parent.gameObject.GetComponent<Rigidbody>();
+            boatRigidbody.constraints = RigidbodyConstraints.None;
+        }
         yield return new WaitForSeconds(2);
 
         textMesh.text = "";
         yield return new WaitForSeconds(1);
     }
 
-    public void setGameOverUI()
+    public void SetGameOverUI()
     {
         textMesh.text = "Your boat is broken! \nGAME OVER";
         if (PhotonNetwork.IsMasterClient)
         {
+            // only Masterclient can restart
             restartButton.gameObject.SetActive(true);
         }
         exitButton.gameObject.SetActive(true);

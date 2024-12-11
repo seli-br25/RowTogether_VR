@@ -98,7 +98,7 @@ public class GameplayManager : MonoBehaviour
             paddleControllerRight.SetTorqueMultiplier(6f);
         } else if (other.CompareTag("Goal"))
         {
-            uiManager.setGoalUI(gameTimer);
+            uiManager.SetGoalUI(gameTimer);
         }
     }
 
@@ -149,7 +149,7 @@ public class GameplayManager : MonoBehaviour
             floater3.depthBeforeSubmerged = 4;
             floater4.depthBeforeSubmerged = 4;
             this.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
-            uiManager.setGameOverUI();
+            uiManager.SetGameOverUI();
         }
 
     }
