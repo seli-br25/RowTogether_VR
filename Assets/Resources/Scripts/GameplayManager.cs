@@ -11,11 +11,10 @@ public class GameplayManager : MonoBehaviour
     private bool isImmune = false;
     private float gameTimer = 0f;
 
-    public GameObject paddleLeft;
-    public GameObject paddleRight;
-    private PaddleBoatController paddleControllerLeft;
-    private PaddleBoatController paddleControllerRight;
+    public PaddleBoatController paddleControllerLeft;
+    public PaddleBoatController paddleControllerRight;
     private float initialForceMultiplier;
+    private float initialTorqueMultiplier;
 
     public GameObject heartUI1;
     public GameObject heartUI2;
@@ -40,9 +39,6 @@ public class GameplayManager : MonoBehaviour
     private void Start()
     {
         photonView = GetComponent<PhotonView>();
-        paddleControllerLeft = paddleLeft.GetComponent<PaddleBoatController>();
-        paddleControllerRight = paddleRight.GetComponent<PaddleBoatController>();
-        initialForceMultiplier = paddleControllerLeft.forceMultiplier;
 
         heartUIs = new List<GameObject>();
         heartUIs.Add(heartUI1);
@@ -57,6 +53,8 @@ public class GameplayManager : MonoBehaviour
         heartItem1 = GameObject.Find("Heart_Up1");
         heartItem2 = GameObject.Find("Heart_Up2");
         initialFloaterDepthBeforeSubmerge = floater1.depthBeforeSubmerged;
+        initialForceMultiplier = paddleControllerLeft.GetForceMultiplier();
+        initialTorqueMultiplier = paddleControllerLeft.GetTorqueMultiplier();
     }
 
     private void Update()
@@ -94,7 +92,10 @@ public class GameplayManager : MonoBehaviour
             other.gameObject.SetActive(false);
         } else  if (other.CompareTag("SpeedTrap"))
         {
-            paddleControllerLeft.forceMultiplier = 4f;
+            paddleControllerLeft.SetForceMultiplier(1f);
+            paddleControllerRight.SetForceMultiplier(1f);
+            paddleControllerLeft.SetTorqueMultiplier(6f);
+            paddleControllerRight.SetTorqueMultiplier(6f);
         } else if (other.CompareTag("Goal"))
         {
             uiManager.setGoalUI(gameTimer);
@@ -105,7 +106,10 @@ public class GameplayManager : MonoBehaviour
     {
         if (other.CompareTag("SpeedTrap"))
         {
-            paddleControllerLeft.forceMultiplier = initialForceMultiplier;
+            paddleControllerLeft.SetForceMultiplier(initialForceMultiplier);
+            paddleControllerRight.SetForceMultiplier(initialForceMultiplier);
+            paddleControllerLeft.SetTorqueMultiplier(initialTorqueMultiplier);
+            paddleControllerRight.SetTorqueMultiplier(initialTorqueMultiplier);
         }
     }
 

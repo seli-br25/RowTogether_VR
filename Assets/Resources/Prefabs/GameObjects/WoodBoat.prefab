@@ -394,8 +394,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9d77cf9d7fbd4103a16ca5bc0bca547, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forceMultiplier: 7
-  torqueMultiplier: 12
   boat: {fileID: 7476816626250502856}
   paddleCollider: {fileID: 309246792113151514}
   handleCollider: {fileID: 2629425346503265477}
@@ -1033,8 +1031,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9d77cf9d7fbd4103a16ca5bc0bca547, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forceMultiplier: 7
-  torqueMultiplier: 12
   boat: {fileID: 7476816626250502856}
   paddleCollider: {fileID: 4509744150314962549}
   handleCollider: {fileID: 5421402059476743579}
@@ -1410,8 +1406,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lives: 3
   immunityTime: 3
-  paddleLeft: {fileID: 3433041524522613087}
-  paddleRight: {fileID: 7021600674944215932}
+  paddleControllerLeft: {fileID: 7505545420786429781}
+  paddleControllerRight: {fileID: 3560238261903293170}
   heartUI1: {fileID: 54685400041940805}
   heartUI2: {fileID: 4647812568476265358}
   heartUI3: {fileID: 8495138030781793628}

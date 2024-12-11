@@ -7,8 +7,8 @@ public class PaddleBoatController : MonoBehaviour
 {
     private PhotonView photonView;
 
-    public float forceMultiplier = 2f;
-    public float torqueMultiplier = 10f;
+    private float forceMultiplier = 7f;
+    private float torqueMultiplier = 12f;
 
     public GameObject boat;
     private Collider boatCollider;
@@ -128,5 +128,25 @@ public class PaddleBoatController : MonoBehaviour
     public void RequestOwnership()
     {
         photonView.RequestOwnership();
+    }
+
+    public void SetForceMultiplier(float newMultiplier)
+    {
+        forceMultiplier = newMultiplier;
+    }
+
+    public void SetTorqueMultiplier(float newMultiplier)
+    {
+        torqueMultiplier = newMultiplier;
+    }
+
+    public float GetForceMultiplier()
+    {
+        return forceMultiplier;
+    }
+
+    public float GetTorqueMultiplier()
+    {
+        return torqueMultiplier;
     }
 }
