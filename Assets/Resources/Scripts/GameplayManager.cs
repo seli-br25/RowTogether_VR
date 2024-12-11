@@ -25,6 +25,11 @@ public class GameplayManager : MonoBehaviour
     private Material activatedMaterial;
 
     private PhotonView photonView;
+    public UIManager uiManager;
+    public Floater floater1;
+    public Floater floater2;
+    public Floater floater3;
+    public Floater floater4;
 
     private void Start()
     {
@@ -39,6 +44,8 @@ public class GameplayManager : MonoBehaviour
         heartUIs.Add(heartUI3);
         activatedMaterial = heartUI1.GetComponent<MeshRenderer>().materials[0];
         UpdateLivesUI();
+
+        uiManager = transform.Find("Seats/Left Seat/XR Origin (XR Rig)").GetComponent<UIManager>();
     }
 
     private void Update()
@@ -46,7 +53,6 @@ public class GameplayManager : MonoBehaviour
         if (lives > 0)
         {
             gameTimer += Time.deltaTime;
-            UpdateTimerUI();
         }
     }
     // because non master clients have their boats set to kinematic and transforms synced via photon transform view, collisions are disabled for them until they become master clients
@@ -60,7 +66,6 @@ public class GameplayManager : MonoBehaviour
             {
                 photonView.RPC("SynchronizeLoseLife", RpcTarget.Others);
             }
-
         }
     }
 
@@ -79,6 +84,9 @@ public class GameplayManager : MonoBehaviour
         } else  if (other.CompareTag("SpeedTrap"))
         {
             paddleControllerLeft.forceMultiplier = 4f;
+        } else if (other.CompareTag("Goal"))
+        {
+            uiManager.setGoalUI(gameTimer);
         }
     }
 
@@ -121,9 +129,12 @@ public class GameplayManager : MonoBehaviour
         if (photonView != null && photonView.IsMine)
         {
             Debug.Log("Game Over!");
-
-            // Maybe just disable all floaters so the boat sinks down, but the view when sunk is empty/ transparent ...
-            // TODO: implement game over
+            floater1.depthBeforeSubmerged = 4;
+            floater2.depthBeforeSubmerged = 4;
+            floater3.depthBeforeSubmerged = 4;
+            floater4.depthBeforeSubmerged = 4;
+            this.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
+            uiManager.setGameOverUI();
         }
 
     }
@@ -146,15 +157,6 @@ public class GameplayManager : MonoBehaviour
             renderer.materials = materials;
         }
                    
-    }
-
-    private void UpdateTimerUI()
-    {
-        // format and display the elapsed time in the UI
-        int minutes = Mathf.FloorToInt(gameTimer / 60F);
-        int seconds = Mathf.FloorToInt(gameTimer % 60F);
-        //Debug.Log(string.Format("{0:00}:{1:00}", minutes, seconds));
-        // TODO: add UI for showing time
     }
 
     private IEnumerator ActivateImmunity()

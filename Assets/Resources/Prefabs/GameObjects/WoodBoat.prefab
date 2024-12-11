@@ -401,7 +401,6 @@ MonoBehaviour:
   handleCollider: {fileID: 2629425346503265477}
   isLeftPaddle: 1
   enableLog: 1
-  enableMovement: 0
 --- !u!114 &1209581885574110532
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1041,7 +1040,6 @@ MonoBehaviour:
   handleCollider: {fileID: 5421402059476743579}
   isLeftPaddle: 0
   enableLog: 1
-  enableMovement: 0
 --- !u!114 &7154697234764750755
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1418,6 +1416,11 @@ MonoBehaviour:
   heartUI2: {fileID: 4647812568476265358}
   heartUI3: {fileID: 8495138030781793628}
   deactivatedMaterial: {fileID: 2100000, guid: e09b04930918e42829f54cc5189c21bb, type: 2}
+  uiManager: {fileID: 0}
+  floater1: {fileID: 2818298389583375958}
+  floater2: {fileID: 2818298390917900378}
+  floater3: {fileID: 2818298391180660553}
+  floater4: {fileID: 2818298391083494417}
 --- !u!114 &2247787470028677713
 MonoBehaviour:
   m_ObjectHideFlags: 0

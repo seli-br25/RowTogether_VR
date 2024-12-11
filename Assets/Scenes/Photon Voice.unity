@@ -3013,7 +3013,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7764898294477450210, guid: 462af77554e457745bdeea57b3d90f1e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 19.718822
+      value: 18.7
       objectReference: {fileID: 0}
     - target: {fileID: 7764898294477450210, guid: 462af77554e457745bdeea57b3d90f1e, type: 3}
       propertyPath: m_LocalPosition.y
@@ -3021,7 +3021,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7764898294477450210, guid: 462af77554e457745bdeea57b3d90f1e, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 313.10904
+      value: 316.4
       objectReference: {fileID: 0}
     - target: {fileID: 7764898294477450210, guid: 462af77554e457745bdeea57b3d90f1e, type: 3}
       propertyPath: m_LocalRotation.w
@@ -7368,7 +7368,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1839977405}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8792553354544473420}
+        m_TargetAssemblyTypeName: HandUINetworkManager, Assembly-CSharp
+        m_MethodName: LeaveRoom
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1859872079 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1486726653596827074, guid: daf661d478fbcbf4791f00721500cb43, type: 3}
@@ -8833,3 +8845,14 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1215325828052615658, guid: 466d632ea13160346b2d6ed1949eaabe, type: 3}
   m_PrefabInstance: {fileID: 7699141977381921953}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8792553354544473420 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 490412546277315977, guid: 466d632ea13160346b2d6ed1949eaabe, type: 3}
+  m_PrefabInstance: {fileID: 7699141977381921953}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5056119593c1ecb4bb31a7d5c3fe03cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
