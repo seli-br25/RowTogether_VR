@@ -181,7 +181,7 @@ public class NetworkPlayerSpawner : MonoBehaviourPunCallbacks
             spawnedShip = shipPhotonView?.gameObject;
             shipPhotonView.RPC("TriggerBoatSync", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer);
         }
-        uiManager.SetTargetObject(spawnedShip);
+        uiManager.SetTargetObject(spawnedShip.GetComponent<GameplayManager>());
 
     }
     public GameObject getSpawnedShip()

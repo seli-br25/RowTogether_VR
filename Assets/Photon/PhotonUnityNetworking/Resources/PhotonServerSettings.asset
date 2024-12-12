@@ -53,6 +53,8 @@ MonoBehaviour:
   - TriggerBoatSync
   - GoalUI
   - setGoalUI
+  - ResetUI
+  - SynchronizeBoatConstraints
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

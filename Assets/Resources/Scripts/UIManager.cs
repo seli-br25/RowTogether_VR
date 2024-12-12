@@ -12,8 +12,8 @@ public class UIManager : MonoBehaviourPunCallbacks
     public Button restartButton;
     public TextMeshProUGUI textMesh;
     private bool wasMasterClient;
-    private GameObject boat;
-    private Rigidbody boatRigidbody;
+    //private GameObject boat;
+    //private Rigidbody boatRigidbody;
     private GameplayManager gameplayManager;
     public Button handMenuRestartButton;
 
@@ -45,7 +45,8 @@ public class UIManager : MonoBehaviourPunCallbacks
         exitButton.gameObject.SetActive(false);
         restartButton.gameObject.SetActive(false);
         showStartScreen();
-        boatRigidbody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationX;
+        //boatRigidbody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationX;
+        gameplayManager.UpdateRigidBodyConstraints((int)(RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationX));
     }
 
     private void Update()
@@ -61,14 +62,19 @@ public class UIManager : MonoBehaviourPunCallbacks
     }
 
     // Only masterclient instance will have these variables set, because initialize ship is only triggered by master client
-    public void SetTargetObject(GameObject obj)
+    public void SetTargetObject(GameplayManager gM)
     {
-        boat = obj;
-        boatRigidbody = boat.GetComponent<Rigidbody>();
+        Debug.Log(gM.ToString());
+        // best to separate rigidbody management from ui management
+
+        //boat = obj;
+        //boatRigidbody = boat.GetComponent<Rigidbody>();
 
         // todo: how to sync constraints to non master. due to onmaster switch, constraints wont be set for non masters
-        boatRigidbody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationX;
-        gameplayManager = boat.GetComponent<GameplayManager>();
+        //boatRigidbody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationX;
+        //gameplayManager = boat.GetComponent<GameplayManager>();
+        gameplayManager = gM;
+        gameplayManager.UpdateRigidBodyConstraints((int)(RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationX));
         restartButton.onClick.AddListener(gameplayManager.ResetGame);
         handMenuRestartButton.onClick.AddListener(gameplayManager.ResetGame);
     }
@@ -119,8 +125,13 @@ public class UIManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient)
         {
             //boatRigidbody = transform.parent.parent.parent.gameObject.GetComponent<Rigidbody>();
-            boatRigidbody.constraints = RigidbodyConstraints.None;
+            //boatRigidbody.constraints = RigidbodyConstraints.None;
         }
+        // Instead constraints synced for all clients, and also freed for all clients
+        // This way existing clients will have constraints freed and new clients joining mid game have correct constraints due to sync trigger request to masater on join
+        gameplayManager.UpdateRigidBodyConstraints((int)RigidbodyConstraints.None);
+        
+
         yield return new WaitForSeconds(2);
 
         textMesh.text = "";

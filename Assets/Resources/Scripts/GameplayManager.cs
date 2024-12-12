@@ -35,10 +35,12 @@ public class GameplayManager : MonoBehaviour
     private float initialFloaterDepthBeforeSubmerge;
     private GameObject heartItem1;
     private GameObject heartItem2;
+    private Rigidbody body;
 
     private void Start()
     {
         photonView = GetComponent<PhotonView>();
+        body = GetComponent<Rigidbody>();
 
         heartUIs = new List<GameObject>();
         heartUIs.Add(heartUI1);
@@ -47,6 +49,7 @@ public class GameplayManager : MonoBehaviour
         activatedMaterial = heartUI1.GetComponent<MeshRenderer>().materials[0];
         UpdateLivesUI();
 
+        // TODO FIX THIS set ui up upon spawn
         uiManager = transform.Find("Seats/Left Seat/XR Origin (XR Rig)").GetComponent<UIManager>();
         initialPosition = this.transform.position;
         initialRotation = this.transform.rotation;
@@ -214,6 +217,19 @@ public class GameplayManager : MonoBehaviour
             floater2.depthBeforeSubmerged = initialFloaterDepthBeforeSubmerge;
             floater3.depthBeforeSubmerged = initialFloaterDepthBeforeSubmerge;
             floater4.depthBeforeSubmerged = initialFloaterDepthBeforeSubmerge;
+            photonView.RPC("SynchronizeLives", RpcTarget.All, lives);
+            photonView.RPC("SynchronizeBoatConstraints", RpcTarget.All, (int)body.constraints);
         }
+    }
+
+
+    public void UpdateRigidBodyConstraints(int constraints)
+    {
+        if (body == null)
+        {
+            body = GetComponent<Rigidbody>();
+        }
+        body.constraints = (RigidbodyConstraints)constraints;
+
     }
 }
