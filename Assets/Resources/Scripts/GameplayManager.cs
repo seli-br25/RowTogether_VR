@@ -199,17 +199,21 @@ public class GameplayManager : MonoBehaviour
 
     public void ResetGame()
     {
-        this.transform.position = initialPosition;
-        this.transform.rotation = initialRotation;
-        lives = 3;
-        UpdateLivesUI();
-        gameTimer = 0f;
-        uiManager.ResetUI();
-        heartItem1.SetActive(true);
-        heartItem2.SetActive(true);
-        floater1.depthBeforeSubmerged = initialFloaterDepthBeforeSubmerge;
-        floater2.depthBeforeSubmerged = initialFloaterDepthBeforeSubmerge;
-        floater3.depthBeforeSubmerged = initialFloaterDepthBeforeSubmerge;
-        floater4.depthBeforeSubmerged = initialFloaterDepthBeforeSubmerge;
+        //TODO SYNC LIFE UI WITH ALL CLIENTS
+        if (PhotonNetwork.IsMasterClient)
+        {
+            this.transform.position = initialPosition;
+            this.transform.rotation = initialRotation;
+            lives = 3;
+            UpdateLivesUI();
+            gameTimer = 0f;
+            uiManager.ResetUI();
+            heartItem1.SetActive(true);
+            heartItem2.SetActive(true);
+            floater1.depthBeforeSubmerged = initialFloaterDepthBeforeSubmerge;
+            floater2.depthBeforeSubmerged = initialFloaterDepthBeforeSubmerge;
+            floater3.depthBeforeSubmerged = initialFloaterDepthBeforeSubmerge;
+            floater4.depthBeforeSubmerged = initialFloaterDepthBeforeSubmerge;
+        }
     }
 }

@@ -60,10 +60,13 @@ public class UIManager : MonoBehaviourPunCallbacks
         }
     }
 
+    // Only masterclient instance will have these variables set, because initialize ship is only triggered by master client
     public void SetTargetObject(GameObject obj)
     {
         boat = obj;
         boatRigidbody = boat.GetComponent<Rigidbody>();
+
+        // todo: how to sync constraints to non master. due to onmaster switch, constraints wont be set for non masters
         boatRigidbody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationX;
         gameplayManager = boat.GetComponent<GameplayManager>();
         restartButton.onClick.AddListener(gameplayManager.ResetGame);
@@ -111,9 +114,11 @@ public class UIManager : MonoBehaviourPunCallbacks
         yield return new WaitForSeconds(1);
 
         textMesh.text = "Go!";
+
+        // TODO if master client switched, constraints broken not established for new masterclient
         if (PhotonNetwork.IsMasterClient)
         {
-            boatRigidbody = transform.parent.parent.parent.gameObject.GetComponent<Rigidbody>();
+            //boatRigidbody = transform.parent.parent.parent.gameObject.GetComponent<Rigidbody>();
             boatRigidbody.constraints = RigidbodyConstraints.None;
         }
         yield return new WaitForSeconds(2);

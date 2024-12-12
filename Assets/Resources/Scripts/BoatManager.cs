@@ -60,9 +60,21 @@ public class BoatManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient)
         {
             photonView.RPC("SynchronizeLives", targetPlayer, boatGameplay.lives);
+            photonView.RPC("SynchronizeBoatConstraints", targetPlayer, (int)body.constraints);
             Debug.Log("MasterClient attempting to sync boat status");
         }
     }
+
+    [PunRPC]
+    public void SynchronizeBoatConstraints(int constraints)
+    {
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            body.constraints = (RigidbodyConstraints)constraints;
+        }
+        Debug.Log("Boat Constraints updated");
+    }
+
 
     [PunRPC]
     public void SynchronizeGainLife()
