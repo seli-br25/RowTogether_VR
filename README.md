@@ -99,3 +99,4 @@ Listed are sources we used and every chatGPT prompt associated with Assignment3
 	- applied implementations considering various edgecases for masterclient switch, late join or in room game over triggers.
 - fixed goal sync
 	- applied implementations considering various edgeaces for masterclient siwtch, late join or in room game over triggers.
+- added support for grabbing paddle out of hand of other player
