@@ -54,6 +54,7 @@ public class BoatManager : MonoBehaviourPunCallbacks
 
 
     // On new player spawned, they will request from the master client to have master client rpc synch the boat status. 
+    // TODO investigate why PhotonNetwork.localplayer (with eg viewid2) works in this instance.
     [PunRPC]
     public void TriggerBoatSync(Player targetPlayer)
     {
@@ -61,6 +62,7 @@ public class BoatManager : MonoBehaviourPunCallbacks
         {
             photonView.RPC("SynchronizeLives", targetPlayer, boatGameplay.lives);
             photonView.RPC("SynchronizeBoatConstraints", targetPlayer, (int)body.constraints);
+
             Debug.Log("MasterClient attempting to sync boat status");
         }
     }
@@ -101,6 +103,68 @@ public class BoatManager : MonoBehaviourPunCallbacks
         }
 
         Debug.Log("Current boat status from master synchronized");
+    }
+
+
+
+
+    // Called after spawning networked player prefab. Triggering master to make an rpc to the requested player.
+    [PunRPC]
+    public void TriggerSynchronizeCanvas(Player targetPlayer)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            Debug.Log("MasterClient attempting to sync canvas status");
+            photonView.RPC("SynchronizeCanvas", targetPlayer, (string)boatGameplay.uiManager.textMesh.text);
+
+        }
+    }
+
+
+    // Checks if the master client text is master text, meaninig has not started game yet
+    // otherwise fetch text via coroutine if not ""
+    // Seemingly sometimes this, but functionalities work....
+    // NullReferenceException: Object reference not set to an instance of an object
+    // BoatManager.SynchronizeCanvas(System.String t) (at Assets/Resources/Scripts/BoatManager.cs:136)
+    [PunRPC]
+    public void SynchronizeCanvas(string t)
+    {
+        if (!PhotonNetwork.IsMasterClient)
+        {
+
+            Debug.Log(boatGameplay);
+
+            Debug.Log(boatGameplay.uiManager);
+
+            string masterText = boatGameplay.uiManager.masterClientText;
+
+            if (t != masterText)
+            {
+                boatGameplay.uiManager.UpdateUIText(t);
+                if (t != "")
+                {
+                    Debug.Log("Trying to start coroutine");
+                    StartCoroutine(boatGameplay.FetchMasterCountdown());
+                }
+            }
+        }
+    }
+
+
+
+
+
+
+    [PunRPC]
+    public void StartCountdown()
+    {
+        StartCoroutine(boatGameplay.CountdownRoutine());
+    }
+
+    [PunRPC]
+    public void ResetUI()
+    {
+        boatGameplay.ResetAndSyncUI();
     }
 
     // the playerViewId is used to store the spawned and synched photonview of the player rig. helps synchronize which photonview is currently sitting in the boat

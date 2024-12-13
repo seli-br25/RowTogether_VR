@@ -7231,7 +7231,6 @@ GameObject:
   - component: {fileID: 1811864269}
   - component: {fileID: 1811864268}
   - component: {fileID: 1811864276}
-  - component: {fileID: 1811864277}
   m_Layer: 0
   m_Name: XR Origin (XR Rig)
   m_TagString: Player
@@ -7353,28 +7352,8 @@ MonoBehaviour:
   restartButton: {fileID: 1744908064}
   textMesh: {fileID: 74853650}
   handMenuRestartButton: {fileID: 386824521}
---- !u!114 &1811864277
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1811864267}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents: []
-  sceneViewId: 2
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
+  masterClientText: You are the Master-Client! Click on the button to start the game
+  nonMasterClientText: Wait for Master-Client to start the game
 --- !u!114 &1816074334 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 9048635873220853195, guid: af4d524513ab1a344ac2222e1ef315d7, type: 3}

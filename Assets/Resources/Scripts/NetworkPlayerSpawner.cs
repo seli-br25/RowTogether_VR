@@ -70,6 +70,14 @@ public class NetworkPlayerSpawner : MonoBehaviourPunCallbacks
 
         SpawnPlayer();
 
+        //yield return new WaitUntil(() => spawnedPlayer.GetPhotonView() != null && spawnedPlayer.GetPhotonView().IsMine);
+
+        //if (!PhotonNetwork.IsMasterClient)
+        //{
+        //    Debug.Log("triggering canvas sync");
+        //    spawnedPlayer.GetPhotonView().RPC("TriggerSynchronizeCanvas", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer);
+        //}
+
     }
 
     private void SpawnPlayer()
@@ -84,6 +92,11 @@ public class NetworkPlayerSpawner : MonoBehaviourPunCallbacks
 
 
         spawnedPlayer = PhotonNetwork.Instantiate(pathToPrefabs + spawnedPlayerPrefab.name, XROrigin.transform.position, XROrigin.transform.rotation);
+
+
+        // Triggers the master to sync the canvas with this player.
+        // covering edgecase of player joining mid or after countdown for start has already started.
+
 
         // first move all already joined photons to correct seating
         if (leftSeat > 0)
@@ -174,15 +187,18 @@ public class NetworkPlayerSpawner : MonoBehaviourPunCallbacks
         {
             spawnedShip = PhotonNetwork.InstantiateRoomObject(pathToPrefabs + spawnedShipPrefab.name, startingShipLocation.transform.position, startingShipLocation.transform.rotation);
             spawnedShip.GetPhotonView().RPC("SetShipID", RpcTarget.MasterClient);
+            spawnedShip.GetComponent<GameplayManager>().InitializeGameplay();
+            spawnedShip.GetComponent<GameplayManager>().InitializeUI(uiManager);
         } else
         {
             int id = (int)PhotonNetwork.CurrentRoom.CustomProperties["ShipID"];
             PhotonView shipPhotonView = PhotonView.Find(id);
             spawnedShip = shipPhotonView?.gameObject;
-            shipPhotonView.RPC("TriggerBoatSync", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer);
-        }
-        uiManager.SetTargetObject(spawnedShip.GetComponent<GameplayManager>());
+            spawnedShip.GetComponent<GameplayManager>().InitializeUI(uiManager);
 
+            shipPhotonView.RPC("TriggerBoatSync", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer);
+            shipPhotonView.RPC("TriggerSynchronizeCanvas", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer);
+        }
     }
     public GameObject getSpawnedShip()
     {

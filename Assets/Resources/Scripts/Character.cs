@@ -6,14 +6,18 @@ using Unity.XR.CoreUtils;
 using TMPro;
 using UnityEngine.UI;
 using ExitGames.Client.Photon;
+using Photon.Realtime;
+using System.Collections;
 
-public class Character : MonoBehaviour
+// MonoBehaviourPunCallbacks is absolutely required for making RPC calls ...
+public class Character : MonoBehaviourPunCallbacks
 {
     public Transform cameraOffset;
     public Transform head;
     public Transform leftHand;
     public Transform rightHand;
-    private PhotonView photonView;
+    //private PhotonView photonView;
+    private XROrigin rig;
 
     private Transform xrRig;
     private Transform cameraOffsetRig;
@@ -35,8 +39,8 @@ public class Character : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        photonView = GetComponent<PhotonView>();
-        XROrigin rig = FindObjectOfType<XROrigin>();
+        //photonView = GetComponent<PhotonView>();
+        rig = FindObjectOfType<XROrigin>();
         xrRig = rig.transform;
         cameraOffsetRig = rig.transform.Find("Camera Offset");
         headRig = rig.transform.Find("Camera Offset/Main Camera");
@@ -88,7 +92,7 @@ public class Character : MonoBehaviour
         // also disable the gameobjects for ghost photonviews whose id is a ghost
         if (xrRig == null)
         {
-            //Debug.Log("XR Rig null");
+            Debug.Log("XR Rig null");
             return;
         }
         if (cameraOffset == null)
@@ -150,7 +154,6 @@ public class Character : MonoBehaviour
             target.rotation = rigTransform.rotation;
         }
     }
-
 
 
     [PunRPC]

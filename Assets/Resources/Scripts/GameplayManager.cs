@@ -24,14 +24,13 @@ public class GameplayManager : MonoBehaviour
     private Material activatedMaterial;
 
     private PhotonView photonView;
-    private UIManager uiManager;
+    public UIManager uiManager;
     public Floater floater1;
     public Floater floater2;
     public Floater floater3;
     public Floater floater4;
 
-    private Vector3 initialPosition;
-    private Quaternion initialRotation;
+    Transform initialBoatTransform;
     private float initialFloaterDepthBeforeSubmerge;
     private GameObject heartItem1;
     private GameObject heartItem2;
@@ -49,15 +48,27 @@ public class GameplayManager : MonoBehaviour
         activatedMaterial = heartUI1.GetComponent<MeshRenderer>().materials[0];
         UpdateLivesUI();
 
-        // TODO FIX THIS set ui up upon spawn
-        uiManager = transform.Find("Seats/Left Seat/XR Origin (XR Rig)").GetComponent<UIManager>();
-        initialPosition = this.transform.position;
-        initialRotation = this.transform.rotation;
+        // instead of recording initial pos/rot at script init, use global already defined ship start location
+        // edgecase: in the middle of play, new player joins. has its initial pos/rot somewhere in track middle
+        // master client leaves/switched. newplayer can reset, but resets to middle of track
+        initialBoatTransform = GameObject.Find("Ship Start Location").transform;
         heartItem1 = GameObject.Find("Heart_Up1");
         heartItem2 = GameObject.Find("Heart_Up2");
         initialFloaterDepthBeforeSubmerge = floater1.depthBeforeSubmerged;
         initialForceMultiplier = paddleControllerLeft.GetForceMultiplier();
         initialTorqueMultiplier = paddleControllerLeft.GetTorqueMultiplier();
+    }
+
+    public void InitializeUI(UIManager manager)
+    {
+        uiManager = manager;
+        uiManager.RegisterButtonListener(ResetGame, StartGame);
+    }
+
+    public void InitializeGameplay()
+    {
+        //TODO check if not castin works as well
+        UpdateRigidBodyConstraints((int)(RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ));
     }
 
     private void Update()
@@ -101,6 +112,7 @@ public class GameplayManager : MonoBehaviour
             paddleControllerRight.SetTorqueMultiplier(6f);
         } else if (other.CompareTag("Goal"))
         {
+            // ui manager has access to gameplay, but gameplay does not have access to ui
             uiManager.SetGoalUI(gameTimer);
         }
     }
@@ -152,6 +164,7 @@ public class GameplayManager : MonoBehaviour
             floater3.depthBeforeSubmerged = 4;
             floater4.depthBeforeSubmerged = 4;
             this.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
+            //
             uiManager.SetGameOverUI();
         }
 
@@ -200,24 +213,103 @@ public class GameplayManager : MonoBehaviour
         boatRenderer.enabled = true;
     }
 
+    public void StartGame()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            uiManager.StartGame();
+            photonView.RPC("StartCountdown", RpcTarget.All);
+        }
+    }
+
+
+    // ISSUE WITH COUNTDOWNROUTINE
+    // only existing players will be able to sync the countdown
+    // new players will keep seeing the UI if joined late
+    // on join fetch text. if master text is anything but "" or default text, then keep fetching text from master with 1 sec delay until ""
+    public IEnumerator CountdownRoutine()
+    {
+        uiManager.UpdateUIText("3");
+        yield return new WaitForSeconds(1);
+
+        uiManager.UpdateUIText("2");
+        yield return new WaitForSeconds(1);
+
+        uiManager.UpdateUIText("1");
+        yield return new WaitForSeconds(1);
+
+        uiManager.UpdateUIText("Go!");
+
+        // TODO if master client switched, constraints broken not established for new masterclient
+        if (PhotonNetwork.IsMasterClient)
+        {
+            //boatRigidbody = transform.parent.parent.parent.gameObject.GetComponent<Rigidbody>();
+            //boatRigidbody.constraints = RigidbodyConstraints.None;
+        }
+
+        // Instead constraints synced for all clients, and also freed for all clients
+        // This way existing clients will have constraints freed and new clients joining mid game have correct constraints due to sync trigger request to masater on join
+        UpdateRigidBodyConstraints((int)RigidbodyConstraints.None);
+        if (PhotonNetwork.IsMasterClient) 
+        {
+            photonView.RPC("SynchronizeBoatConstraints", RpcTarget.Others, (int)(body.constraints));
+        }
+
+        yield return new WaitForSeconds(2);
+
+        uiManager.UpdateUIText("");
+        yield return new WaitForSeconds(1);
+
+        // Due to canvas syncing required here at end of countdown for people joining between coroutine start and end. 
+        // Cannot implement synchronizecanvas in character.cs photonview
+        photonView.RPC("SynchronizeCanvas", RpcTarget.Others, "");
+    }
+
+
+
+    public IEnumerator FetchMasterCountdown()
+    {
+        yield return new WaitForSeconds(1);
+        photonView.RPC("TriggerSynchronizeCanvas", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer);
+    }
+
+
+    public void ResetAndSyncUI()
+    {
+        uiManager.ResetUI();
+        if (PhotonNetwork.IsMasterClient)
+        {
+            photonView.RPC("ResetUI", RpcTarget.Others);
+        }
+    }
+
     public void ResetGame()
     {
         //TODO SYNC LIFE UI WITH ALL CLIENTS
         if (PhotonNetwork.IsMasterClient)
         {
-            this.transform.position = initialPosition;
-            this.transform.rotation = initialRotation;
+
+            this.transform.position = initialBoatTransform.position;
+            this.transform.rotation = initialBoatTransform.rotation;
+            
+            // reset and resync lives
             lives = 3;
             UpdateLivesUI();
+            photonView.RPC("SynchronizeLives", RpcTarget.All, lives);
+
             gameTimer = 0f;
-            uiManager.ResetUI();
+
+            ResetAndSyncUI();
+
             heartItem1.SetActive(true);
             heartItem2.SetActive(true);
             floater1.depthBeforeSubmerged = initialFloaterDepthBeforeSubmerge;
             floater2.depthBeforeSubmerged = initialFloaterDepthBeforeSubmerge;
             floater3.depthBeforeSubmerged = initialFloaterDepthBeforeSubmerge;
             floater4.depthBeforeSubmerged = initialFloaterDepthBeforeSubmerge;
-            photonView.RPC("SynchronizeLives", RpcTarget.All, lives);
+
+            // reset boat constraints resync constraints
+            UpdateRigidBodyConstraints((int)(RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ));
             photonView.RPC("SynchronizeBoatConstraints", RpcTarget.All, (int)body.constraints);
         }
     }
