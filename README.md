@@ -63,4 +63,30 @@ Listed are sources we used and every chatGPT prompt associated with Assignment3
 	- RPC Request to master for sync
 		- After joining and Network initialization finished, make RPC call RpcTarget.MasterClient with params Player PhotonNetwork.LocalPlayer, to issue master client rpc to new target player
 		- Master client then syncs his game state directly with the new player.
+
 # Changelog
+13.12.24
+- refactored UIManager to only manage ui
+	- Ui manager no longer has access to gameplaymanager. 
+	- on button listeners are added via gameplaymanager passing correct methods
+	- on button click will trigger the correct gameplay features
+- refactored Gameplaymanager to manage game state, game play, required UI change triggers
+	- gameplay manager has access to uimanager. UI changes can be triggered. 
+	- reason for this: triggers and colliders all implemented in gameplay. On triggers need to change ui
+- Moved most/all PunRPC calls to boatmanager (prob should be called boatnetworkedmanager)
+	- network related all aggregated for easier overview and access
+	- has access to gameplay manager and therefore access to uimanager if needed.
+- sync boat constraints to existing and new players upon join.
+	- Having constraints on all non-master clients is very benefitial, despite movement of boat sync regardless.
+	- Fixed edgecase of master leaving, but new master having no boat constraints before game starts.
+- Fixed Gamereset not resetting correctly when masterswitched.
+	- Use existing ship start location gameobject in scene instead of setting initial pos/rot of ship. Edgecase of switched master resetting boat into middle of track prevented.	
+	- Fixed sync of game reset not sync lives, livesUI, boat constraints constraints
+- Fixed canvas UI desync for new players upon join
+	- the start ui is implemented via routine and countdown.
+	- If the countdown starts and a new player/observer joins, the UI will never update.
+	- Fixed by implementing master client UI request upon new player join. If the UI text displaying anything but default master client text, start routine to fetch current master client canvas text until hitting ""
+- Fixed Trees becoming grey on pc build
+	- changed tree bard material to required Nature/soft occlusion
+	- Increased trees billboard start distance
+- Added OpenXR HTC Vive controller support
