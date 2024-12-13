@@ -90,3 +90,12 @@ Listed are sources we used and every chatGPT prompt associated with Assignment3
 	- changed tree bard material to required Nature/soft occlusion
 	- Increased trees billboard start distance
 - Added OpenXR HTC Vive controller support
+13.12.24
+- fixed heartItems synced via photon views
+	- multiple heartItems can be spawned by dragging prefab into scene.
+	- simply give photonview an id between 200 - 210
+	- all calculation and triggers for potential added heartItems have been implemented already. see heartPhotonViewIDs list in gameplaymanager
+- fixed gameover sync
+	- applied implementations considering various edgecases for masterclient switch, late join or in room game over triggers.
+- fixed goal sync
+	- applied implementations considering various edgeaces for masterclient siwtch, late join or in room game over triggers.

@@ -38,7 +38,7 @@ public class GameplayManager : MonoBehaviour
 
     // all hearts are created in editor and have a photon view from 200 - 220
     // if new hearts need to be added, assign them a appropriate photon view id in the range and add that id here.
-    private List<int> heartPhotonViewIDs = new List<int>( new int[] {200, 201, 202, 203, 204, 205});
+    private List<int> heartPhotonViewIDs = new List<int>( new int[] {200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210});
 
     private bool goalReached = false;
     private Rigidbody body;
