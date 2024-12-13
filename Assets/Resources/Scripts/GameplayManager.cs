@@ -40,6 +40,7 @@ public class GameplayManager : MonoBehaviour
     // if new hearts need to be added, assign them a appropriate photon view id in the range and add that id here.
     private List<int> heartPhotonViewIDs = new List<int>( new int[] {200, 201, 202, 203, 204, 205});
 
+    private bool goalReached = false;
     private Rigidbody body;
 
     private void Start()
@@ -79,12 +80,14 @@ public class GameplayManager : MonoBehaviour
 
     private void Update()
     {
-        if (lives > 0)
+        // only manage timer if is master
+        if (lives > 0 && PhotonNetwork.IsMasterClient && !goalReached)
         {
             gameTimer += Time.deltaTime;
         }
     }
-    // because non master clients have their boats set to kinematic and transforms synced via photon transform view, collisions are disabled for them until they become master clients
+    // because non master clients have their boats set to kinematic and transforms synced via photon transform view,
+    // collisions are disabled for them anyways until they become master clients
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Obstacle") && !isImmune)
@@ -124,8 +127,7 @@ public class GameplayManager : MonoBehaviour
             }
             else if (other.CompareTag("Goal"))
             {
-                // ui manager has access to gameplay, but gameplay does not have access to ui
-                uiManager.SetGoalUI(gameTimer);
+                SetGoalAndSyncUI();
             }
         }
         
@@ -166,23 +168,7 @@ public class GameplayManager : MonoBehaviour
         }
     }
 
-    private void GameOver()
-    {
-        // only invoke game over if this boats photonview is mine (masterclients)
-        // for non master clients, game over is synched through master client for safer approach agains desync
-        if (photonView != null && photonView.IsMine)
-        {
-            Debug.Log("Game Over!");
-            floater1.depthBeforeSubmerged = 4;
-            floater2.depthBeforeSubmerged = 4;
-            floater3.depthBeforeSubmerged = 4;
-            floater4.depthBeforeSubmerged = 4;
-            this.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
-            //
-            uiManager.SetGameOverUI();
-        }
 
-    }
 
     public void UpdateLivesUI()
     {
@@ -227,14 +213,7 @@ public class GameplayManager : MonoBehaviour
         boatRenderer.enabled = true;
     }
 
-    public void StartGame()
-    {
-        if (PhotonNetwork.IsMasterClient)
-        {
-            uiManager.StartGame();
-            photonView.RPC("StartCountdown", RpcTarget.All);
-        }
-    }
+
 
 
     // ISSUE WITH COUNTDOWNROUTINE
@@ -254,20 +233,16 @@ public class GameplayManager : MonoBehaviour
 
         uiManager.UpdateUIText("Go!");
 
+
+        SetGameTimer(0f);
+
         // TODO if master client switched, constraints broken not established for new masterclient
-        if (PhotonNetwork.IsMasterClient)
-        {
-            //boatRigidbody = transform.parent.parent.parent.gameObject.GetComponent<Rigidbody>();
-            //boatRigidbody.constraints = RigidbodyConstraints.None;
-        }
+
 
         // Instead constraints synced for all clients, and also freed for all clients
         // This way existing clients will have constraints freed and new clients joining mid game have correct constraints due to sync trigger request to masater on join
         UpdateRigidBodyConstraints((int)RigidbodyConstraints.None);
-        if (PhotonNetwork.IsMasterClient) 
-        {
-            photonView.RPC("SynchronizeBoatConstraints", RpcTarget.Others, (int)(body.constraints));
-        }
+
 
         yield return new WaitForSeconds(2);
 
@@ -276,18 +251,44 @@ public class GameplayManager : MonoBehaviour
 
         // Due to canvas syncing required here at end of countdown for people joining between coroutine start and end. 
         // Cannot implement synchronizecanvas in character.cs photonview
-        photonView.RPC("SynchronizeCanvas", RpcTarget.Others, "");
+        // NOT SURE IF NEEDED
+        if (PhotonNetwork.IsMasterClient) {
+            photonView.RPC("SynchronizeCanvas", RpcTarget.Others, "");
+        }
     }
 
 
 
-    public IEnumerator FetchMasterCountdown()
+
+
+    //////////////
+    // UI STUFF //
+    //////////////
+
+    // called by a PunRPC call from BoatManger.cs
+    public void SetGoalAndSyncUI()
     {
-        yield return new WaitForSeconds(1);
-        photonView.RPC("TriggerSynchronizeCanvas", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer);
+        // timer is alreday comming from gametimer, but for non master clients this can vary from their gameTimer
+        // setting this here again can help synchronize
+        // as SetGoalAndSyncUI will be called by a PunRPC call
+        goalReached = true;
+        uiManager.SetGoalUI(gameTimer);
+        if (PhotonNetwork.IsMasterClient) 
+        {
+            photonView.RPC("SetGoalUI", RpcTarget.Others, (float)gameTimer);
+        }
     }
 
-
+    // called by a PunRPC call from BoatManger.cs
+    public void SetGameOverAndSyncUI()
+    {
+        uiManager.SetGameOverUI();
+        if (PhotonNetwork.IsMasterClient)
+        {
+            photonView.RPC("SetGameOverUI", RpcTarget.Others);
+        }
+    }
+    // called by a PunRPC call from BoatManger.cs
     public void ResetAndSyncUI()
     {
         uiManager.ResetUI();
@@ -297,9 +298,43 @@ public class GameplayManager : MonoBehaviour
         }
     }
 
+
+
+    //////////////////////
+    // Game State Stuff //
+    //////////////////////
+
+    public void StartGame()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            uiManager.StartGame();
+            goalReached = false;
+            photonView.RPC("StartCountdown", RpcTarget.All);
+        }
+
+    }
+
+    private void GameOver()
+    {
+        // only invoke game over if this boats photonview is mine (masterclients)
+        // for non master clients, game over is synched through master client for safer approach agains desync
+        if (photonView != null && photonView.IsMine)
+        {
+            Debug.Log("Game Over!");
+            floater1.depthBeforeSubmerged = 4;
+            floater2.depthBeforeSubmerged = 4;
+            floater3.depthBeforeSubmerged = 4;
+            floater4.depthBeforeSubmerged = 4;
+            UpdateRigidBodyConstraints((int)(RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation));
+
+            SetGameOverAndSyncUI();
+        }
+
+    }
+
     public void ResetGame()
     {
-        //TODO SYNC LIFE UI WITH ALL CLIENTS
         if (PhotonNetwork.IsMasterClient)
         {
 
@@ -311,7 +346,8 @@ public class GameplayManager : MonoBehaviour
             UpdateLivesUI();
             photonView.RPC("SynchronizeLives", RpcTarget.All, lives);
 
-            gameTimer = 0f;
+            goalReached = false;
+            SetGameTimer(0f);
 
             ResetAndSyncUI();
 
@@ -324,8 +360,6 @@ public class GameplayManager : MonoBehaviour
                 }
             }
 
-            //heartItem1.SetActive(true);
-            //heartItem2.SetActive(true);
             floater1.depthBeforeSubmerged = initialFloaterDepthBeforeSubmerge;
             floater2.depthBeforeSubmerged = initialFloaterDepthBeforeSubmerge;
             floater3.depthBeforeSubmerged = initialFloaterDepthBeforeSubmerge;
@@ -333,10 +367,21 @@ public class GameplayManager : MonoBehaviour
 
             // reset boat constraints resync constraints
             UpdateRigidBodyConstraints((int)(RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ));
-            photonView.RPC("SynchronizeBoatConstraints", RpcTarget.All, (int)body.constraints);
         }
     }
 
+    public void SetGameTimer(float time)
+    {
+        gameTimer = time;
+        if (PhotonNetwork.IsMasterClient)
+        {
+            photonView.RPC("SyncGameTimer", RpcTarget.Others, gameTimer);
+        }
+    }
+    public float GetGameTimer()
+    {
+        return gameTimer;
+    }
 
     public void UpdateRigidBodyConstraints(int constraints)
     {
@@ -346,5 +391,9 @@ public class GameplayManager : MonoBehaviour
         }
         body.constraints = (RigidbodyConstraints)constraints;
 
+        if (PhotonNetwork.IsMasterClient)
+        {
+            photonView?.RPC("SynchronizeBoatConstraints", RpcTarget.Others, (int)body.constraints);
+        }
     }
 }

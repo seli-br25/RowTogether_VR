@@ -20,6 +20,8 @@ public class UIManager : MonoBehaviourPunCallbacks
 
     public string masterClientText = "You are the Master-Client! Click on the button to start the game";
     public string nonMasterClientText = "Wait for Master-Client to start the game";
+    public string gameOverText = "Your boat is broken! \nGAME OVER";
+    public string goalText = "You reached the Goal! CONGRATS!";
 
     private void Start()
     {
@@ -92,12 +94,19 @@ public class UIManager : MonoBehaviourPunCallbacks
         startGameButton.gameObject.SetActive(false);
     }
 
-    public void SetGoalUI(float endTime)
+    public void SetGoalUI(float? endTime = null)
     {
-        int minutes = Mathf.FloorToInt(endTime / 60F);
-        int seconds = Mathf.FloorToInt(endTime % 60F);
+        string finishTime = "";
 
-        textMesh.text = string.Format("You reached the Goal! CONGRATS!\nYour time: {0:00}:{1:00}", minutes, seconds);
+        if (endTime != null)
+        {
+            int minutes = Mathf.FloorToInt((float)endTime / 60F);
+            int seconds = Mathf.FloorToInt((float)endTime % 60F);
+            finishTime = string.Format("\nYour time: {0:00}:{1:00}", minutes, seconds);
+        }
+
+
+        textMesh.text = goalText + finishTime;
         if (PhotonNetwork.IsMasterClient)
         {
             // only Masterclient can restart
@@ -117,13 +126,12 @@ public class UIManager : MonoBehaviourPunCallbacks
 
     public void SetGameOverUI()
     {
-        textMesh.text = "Your boat is broken! \nGAME OVER";
+        textMesh.text = gameOverText;
         if (PhotonNetwork.IsMasterClient)
         {
             // only Masterclient can restart
             restartButton.gameObject.SetActive(true);
         }
         exitButton.gameObject.SetActive(true);
-        
     }
 }

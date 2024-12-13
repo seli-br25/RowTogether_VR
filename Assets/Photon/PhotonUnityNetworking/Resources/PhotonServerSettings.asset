@@ -58,6 +58,9 @@ MonoBehaviour:
   - ResetGame
   - SynchronizeCanvas
   - TriggerSynchronizeCanvas
+  - SetGameOverUI
+  - SetGoalUI
+  - SyncGameTimer
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

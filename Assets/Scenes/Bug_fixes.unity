@@ -7411,6 +7411,8 @@ MonoBehaviour:
   handMenuRestartButton: {fileID: 386824521}
   masterClientText: You are the Master-Client! Click on the button to start the game
   nonMasterClientText: Wait for Master-Client to start the game
+  gameOverText: "Your boat is broken! \nGAME OVER"
+  goalText: You reached the Goal! CONGRATS!
 --- !u!114 &1816074334 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 9048635873220853195, guid: af4d524513ab1a344ac2222e1ef315d7, type: 3}
@@ -9030,7 +9032,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7658687279811718265, guid: e57313fe3f89ef744be5adf7a900a415, type: 3}
       propertyPath: sceneViewId
-      value: 2
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 7658687279811718267, guid: e57313fe3f89ef744be5adf7a900a415, type: 3}
       propertyPath: m_Name
