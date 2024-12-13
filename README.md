@@ -64,6 +64,15 @@ Listed are sources we used and every chatGPT prompt associated with Assignment3
 		- After joining and Network initialization finished, make RPC call RpcTarget.MasterClient with params Player PhotonNetwork.LocalPlayer, to issue master client rpc to new target player
 		- Master client then syncs his game state directly with the new player.
 
+
+# Todo
+- investigate heart objects resetting/pickup sync
+- implement goal/loose gameplay function
+- adjust terrain and imporve env
+- add easy skybox & prevent cutoff of world
+- playtest
+
+
 # Changelog
 13.12.24
 - refactored UIManager to only manage ui
