@@ -1,7 +1,6 @@
 using UnityEngine;
 using Photon.Pun;
 using ExitGames.Client.Photon;
-using UnityEngine.XR.Interaction.Toolkit;
 using Photon.Realtime;
 
 public class BoatManager : MonoBehaviourPunCallbacks
@@ -62,6 +61,7 @@ public class BoatManager : MonoBehaviourPunCallbacks
         {
             photonView.RPC("SynchronizeLives", targetPlayer, boatGameplay.lives);
             photonView.RPC("SynchronizeBoatConstraints", targetPlayer, (int)body.constraints);
+            photonView.RPC("SyncGameTimer", targetPlayer, (float) boatGameplay.GetGameTimer());
 
             Debug.Log("MasterClient attempting to sync boat status");
         }
@@ -106,6 +106,15 @@ public class BoatManager : MonoBehaviourPunCallbacks
     }
 
 
+    [PunRPC]
+    public void SyncGameTimer(float time)
+    {
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            boatGameplay.SetGameTimer(time);
+        }
+    }
+
 
 
     // Called after spawning networked player prefab. Triggering master to make an rpc to the requested player.
@@ -120,7 +129,6 @@ public class BoatManager : MonoBehaviourPunCallbacks
         }
     }
 
-
     // Checks if the master client text is master text, meaninig has not started game yet
     // otherwise fetch text via coroutine if not ""
     // Seemingly sometimes this, but functionalities work....
@@ -131,25 +139,45 @@ public class BoatManager : MonoBehaviourPunCallbacks
     {
         if (!PhotonNetwork.IsMasterClient)
         {
-
-            Debug.Log(boatGameplay);
-
-            Debug.Log(boatGameplay.uiManager);
-
             string masterText = boatGameplay.uiManager.masterClientText;
+            string gameOverText = boatGameplay.uiManager.gameOverText;
+            string goalText = boatGameplay.uiManager.goalText;
+
 
             if (t != masterText)
             {
                 boatGameplay.uiManager.UpdateUIText(t);
-                if (t != "")
+
+                if (t == gameOverText)
                 {
-                    Debug.Log("Trying to start coroutine");
-                    StartCoroutine(boatGameplay.FetchMasterCountdown());
+                    boatGameplay.SetGameOverAndSyncUI();
+                } 
+                else if (t.Contains(goalText))
+                {
+                    boatGameplay.SetGoalAndSyncUI(); 
+                }
+                // do the countdown fetching only if the text is not one of these from above
+                else if (t != "")
+                {
+                    Debug.Log("Fetching UI from Master");
+                    StartCoroutine(FetchMasterCountdown());
                 }
             }
         }
     }
 
+
+    public System.Collections.IEnumerator FetchMasterCountdown()
+    {
+        yield return new WaitForSeconds(1);
+        photonView.RPC("TriggerSynchronizeCanvas", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer);
+    }
+
+
+    private string NormalizeText(string input)
+    {
+        return input.Replace("\r\n", "\n").Replace("\r", "\n").Trim();
+    }
 
 
 
@@ -160,6 +188,21 @@ public class BoatManager : MonoBehaviourPunCallbacks
     {
         StartCoroutine(boatGameplay.CountdownRoutine());
     }
+
+
+    [PunRPC]
+    public void SetGoalUI(float timer)
+    {
+        boatGameplay.SetGameTimer(timer);
+        boatGameplay.SetGoalAndSyncUI();
+    }
+
+    [PunRPC]
+    public void SetGameOverUI()
+    {
+        boatGameplay.SetGameOverAndSyncUI();
+    }
+
 
     [PunRPC]
     public void ResetUI()
