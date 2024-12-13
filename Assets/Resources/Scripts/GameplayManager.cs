@@ -32,8 +32,14 @@ public class GameplayManager : MonoBehaviour
 
     Transform initialBoatTransform;
     private float initialFloaterDepthBeforeSubmerge;
-    private GameObject heartItem1;
-    private GameObject heartItem2;
+    //private GameObject heartItem1;
+    //private GameObject heartItem2;
+
+
+    // all hearts are created in editor and have a photon view from 200 - 220
+    // if new hearts need to be added, assign them a appropriate photon view id in the range and add that id here.
+    private List<int> heartPhotonViewIDs = new List<int>( new int[] {200, 201, 202, 203, 204, 205});
+
     private Rigidbody body;
 
     private void Start()
@@ -52,8 +58,8 @@ public class GameplayManager : MonoBehaviour
         // edgecase: in the middle of play, new player joins. has its initial pos/rot somewhere in track middle
         // master client leaves/switched. newplayer can reset, but resets to middle of track
         initialBoatTransform = GameObject.Find("Ship Start Location").transform;
-        heartItem1 = GameObject.Find("Heart_Up1");
-        heartItem2 = GameObject.Find("Heart_Up2");
+        //heartItem1 = GameObject.Find("Heart_Up1");
+        //heartItem2 = GameObject.Find("Heart_Up2");
         initialFloaterDepthBeforeSubmerge = floater1.depthBeforeSubmerged;
         initialForceMultiplier = paddleControllerLeft.GetForceMultiplier();
         initialTorqueMultiplier = paddleControllerLeft.GetTorqueMultiplier();
@@ -94,27 +100,35 @@ public class GameplayManager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("HeartItem"))
+        if (PhotonNetwork.IsMasterClient)
         {
-            GainLife();
-
-            if (photonView != null && photonView.IsMine)
+            if (other.CompareTag("HeartItem"))
             {
-                photonView.RPC("SynchronizeGainLife", RpcTarget.Others);
+                GainLife();
+
+                if (photonView != null && photonView.IsMine)
+                {
+                    photonView.RPC("SynchronizeGainLife", RpcTarget.Others);
+                }
+
+                other.gameObject.GetComponentInParent<HeartSynchronizer>().SetState(false);
+
+                //other.gameObject.SetActive(false);
             }
-            
-            other.gameObject.SetActive(false);
-        } else  if (other.CompareTag("SpeedTrap"))
-        {
-            paddleControllerLeft.SetForceMultiplier(1f);
-            paddleControllerRight.SetForceMultiplier(1f);
-            paddleControllerLeft.SetTorqueMultiplier(6f);
-            paddleControllerRight.SetTorqueMultiplier(6f);
-        } else if (other.CompareTag("Goal"))
-        {
-            // ui manager has access to gameplay, but gameplay does not have access to ui
-            uiManager.SetGoalUI(gameTimer);
+            else if (other.CompareTag("SpeedTrap"))
+            {
+                paddleControllerLeft.SetForceMultiplier(1f);
+                paddleControllerRight.SetForceMultiplier(1f);
+                paddleControllerLeft.SetTorqueMultiplier(6f);
+                paddleControllerRight.SetTorqueMultiplier(6f);
+            }
+            else if (other.CompareTag("Goal"))
+            {
+                // ui manager has access to gameplay, but gameplay does not have access to ui
+                uiManager.SetGoalUI(gameTimer);
+            }
         }
+        
     }
 
     private void OnTriggerExit(Collider other)
@@ -301,8 +315,17 @@ public class GameplayManager : MonoBehaviour
 
             ResetAndSyncUI();
 
-            heartItem1.SetActive(true);
-            heartItem2.SetActive(true);
+            foreach(var id in heartPhotonViewIDs)
+            {
+                GameObject heartItem = PhotonView.Find(id)?.gameObject;
+                if (heartItem != null)
+                {
+                    heartItem.GetComponent<HeartSynchronizer>().SetState(true);
+                }
+            }
+
+            //heartItem1.SetActive(true);
+            //heartItem2.SetActive(true);
             floater1.depthBeforeSubmerged = initialFloaterDepthBeforeSubmerge;
             floater2.depthBeforeSubmerged = initialFloaterDepthBeforeSubmerge;
             floater3.depthBeforeSubmerged = initialFloaterDepthBeforeSubmerge;
