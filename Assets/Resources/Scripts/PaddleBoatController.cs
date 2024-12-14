@@ -31,6 +31,9 @@ public class PaddleBoatController : MonoBehaviourPun, IPunOwnershipCallbacks
     public bool enableLog;
     private int grabCount = 0;
 
+    public PaddleAudioManager soundEffectManager;
+    private Vector3 preWaterVelocitySoundDecider;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -49,6 +52,22 @@ public class PaddleBoatController : MonoBehaviourPun, IPunOwnershipCallbacks
 
     void FixedUpdate()
     {
+
+        if ((transform.localPosition != initialLocalPosition && transform.localRotation != initialLocalRotation) && !inWater)
+        {
+            // Update the paddle's velocity
+            if (lastPosition == Vector3.zero)
+            {
+                lastPosition = paddleCollider.bounds.center;
+                preWaterVelocitySoundDecider = Vector3.zero; // Reset velocity if no previous position exists
+                return;
+            }
+
+            Vector3 currentPosition = paddleCollider.bounds.center;
+            preWaterVelocitySoundDecider = (currentPosition - lastPosition) / Time.fixedDeltaTime;
+            lastPosition = currentPosition;
+        }
+
         if (inWater)
         {
             // check if paddle was outside of the water before
@@ -95,6 +114,21 @@ public class PaddleBoatController : MonoBehaviourPun, IPunOwnershipCallbacks
         if (other.tag.Equals("Water"))
         {
             inWater = true;
+            if (transform.localPosition != initialLocalPosition || transform.localRotation != initialLocalRotation)
+            {
+
+                float paddleSpeed = preWaterVelocitySoundDecider.magnitude;
+
+                if (paddleSpeed > 2)
+                {
+                    soundEffectManager.PlayRandomAudio(0);
+                }
+                else
+                {
+                    soundEffectManager.PlayRandomAudio(1);
+                }
+                
+            }
         }
     }
 
