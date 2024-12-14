@@ -29,7 +29,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/Dev Scenes/WIP LocoPhoto.unity
     guid: eced30179e750c94cb32d38f5e1865a0
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Dev Scenes/Photon Voice.unity
     guid: 7c9ed56156559054fb7721d8ce476078
   m_configObjects:
