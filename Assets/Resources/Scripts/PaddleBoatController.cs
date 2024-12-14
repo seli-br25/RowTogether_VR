@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using UnityEngine.XR.Interaction.Toolkit;
+using Photon.Realtime;
 
-public class PaddleBoatController : MonoBehaviour
+public class PaddleBoatController : MonoBehaviourPun, IPunOwnershipCallbacks
 {
-    private PhotonView photonView;
 
     private float forceMultiplier = 7f;
     private float torqueMultiplier = 12f;
@@ -33,7 +34,7 @@ public class PaddleBoatController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        photonView = GetComponent<PhotonView>();
+
         initialLocalPosition = transform.localPosition;
         initialLocalRotation = transform.localRotation;
         lastPosition = Vector3.zero;
@@ -107,6 +108,10 @@ public class PaddleBoatController : MonoBehaviour
         }
     }
 
+    public void Update()
+    {
+    }
+
     public void OnPaddleGrab()
     {
         grabCount++;
@@ -148,5 +153,73 @@ public class PaddleBoatController : MonoBehaviour
     public float GetTorqueMultiplier()
     {
         return torqueMultiplier;
+    }
+
+
+    private void OnEnable()
+    {
+        PhotonNetwork.AddCallbackTarget(this);
+    }
+
+    private void OnDisable()
+    {
+        PhotonNetwork.RemoveCallbackTarget(this);
+    }
+
+
+    public void OnOwnershipRequest(PhotonView targetView, Player requestingPlayer)
+    {
+        Debug.Log($"Ownership requested by: {requestingPlayer.NickName} for PhotonView: {targetView.ViewID}");
+
+        // Ensure this is the correct PhotonView
+        if (targetView == photonView && photonView.IsMine)
+        {
+            
+            photonView.TransferOwnership(requestingPlayer);
+            Debug.Log($"Ownership granted to: {requestingPlayer.NickName}");
+        }
+        else
+        {
+            Debug.LogWarning("Ownership request ignored; either not the owner or wrong PhotonView.");
+        }
+    }
+
+    public void OnOwnershipTransfered(PhotonView targetView, Player previousOwner)
+    {
+
+        if (targetView == photonView)
+        {
+            //Debug.Log($"Ownership transferred from: {previousOwner.NickName} to: {photonView.Owner.NickName}");
+
+            // Additional logic, if required, such as resetting UI or state
+            if (!photonView.IsMine)
+            {
+                XRGrabInteractableNetworked interactable = GetComponent<XRGrabInteractableNetworked>();
+                // Force release the object if it's currently grabbed
+                //IXRSelectInteractor firstInteractor = GetComponent<XRGrabInteractableNetworked>().firstInteractorSelecting;
+                List<IXRSelectInteractor> allInteractors = new List<IXRSelectInteractor> (interactable.interactorsSelecting);
+                foreach (IXRSelectInteractor interactor in allInteractors)
+                {
+                    if (interactor != null)
+                    {
+                        interactable.interactionManager.SelectExit(interactor, interactable);
+                    }
+                }
+                
+                grabCount = 0;
+
+            }
+        }
+
+    }
+
+    public void OnOwnershipTransferFailed(PhotonView targetView, Player senderOfFailedRequest)
+    {
+        if (targetView == photonView)
+        {
+            Debug.LogError($"Ownership transfer failed for PhotonView: {targetView.ViewID}. Requested by: {senderOfFailedRequest.NickName}");
+
+            // Handle failure, such as retrying or showing a message to the user
+        }
     }
 }
