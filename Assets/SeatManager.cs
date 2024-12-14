@@ -10,14 +10,31 @@ public class SeatManager : MonoBehaviourPunCallbacks, IPunObservable
     // Start is called before the first frame update
     [SerializeField]
     private GameObject leftSeat;
-    private int leftPlayerViewID = 0;
+    public int leftPlayerViewID = 0;
     [SerializeField]
     private GameObject rightSeat;
-    private int rightPlayerViewID = 0;
+    public int rightPlayerViewID = 0;
     [SerializeField]
-    private GameObject ghostSeat;
-    private List<int> ghostPlayerViewIDs = new List<int>();
+    private GameObject ghostSeat0;
+    public int ghostPlayerViewID0 = 0;
+    [SerializeField]
+    private GameObject ghostSeat1;
+    public int ghostPlayerViewID1 = 0;
+    [SerializeField]
+    private GameObject ghostSeat2;
+    public int ghostPlayerViewID2 = 0;
+    [SerializeField]
+    private GameObject ghostSeat3;
+    public int ghostPlayerViewID3 = 0;
+    [SerializeField]
+    private GameObject ghostSeat4;
+    public int ghostPlayerViewID4 = 0;
+
     public bool seatsUpdated = false;
+
+
+    // TODO if have time:
+    // implement seat change && ghost player head materials
 
 
     // Custom sync logic
@@ -33,76 +50,76 @@ public class SeatManager : MonoBehaviourPunCallbacks, IPunObservable
         if (stream.IsWriting)
         {
             stream.SendNext(leftPlayerViewID);
-
             stream.SendNext(rightPlayerViewID);
 
-
-            stream.SendNext(ghostPlayerViewIDs.Count);
-            foreach (int viewID in ghostPlayerViewIDs)
-            {
-                stream.SendNext(viewID);
-            }
+            stream.SendNext(ghostPlayerViewID0);
+            stream.SendNext(ghostPlayerViewID1);
+            stream.SendNext(ghostPlayerViewID2);
+            stream.SendNext(ghostPlayerViewID3);
+            stream.SendNext(ghostPlayerViewID4);
 
         }
         else if (stream.IsReading)
         {
-            int tempLeftPlayerViewID = (int)stream.ReceiveNext();
+            int tempID;
 
-            if (tempLeftPlayerViewID != 0 && tempLeftPlayerViewID != leftPlayerViewID)
-            {
-                PhotonView leftPlayerPhotonView = PhotonView.Find(tempLeftPlayerViewID);
-                if (leftPlayerPhotonView != null && leftPlayerPhotonView.IsMine)
-                {
-                    XROrigin xROrigin = FindObjectOfType<XROrigin>();
-                    SitDown(xROrigin.transform, leftSeat.transform);
-                }
+            tempID = (int)stream.ReceiveNext();
+            AssignSeating(tempID, leftPlayerViewID, leftSeat.transform);
+            leftPlayerViewID = tempID;
 
-                GameObject leftPlayer = leftPlayerPhotonView?.gameObject;
-                if (leftPlayer != null)
-                {
-                    SitDown(leftPlayer.transform, leftSeat.transform);
-                } 
-
-            }
-            leftPlayerViewID = tempLeftPlayerViewID;
+            tempID = (int)stream.ReceiveNext();
+            AssignSeating(tempID, rightPlayerViewID, rightSeat.transform);
+            rightPlayerViewID = tempID;
 
 
-            int tempRightPlayerViewID = (int)stream.ReceiveNext();
+            tempID = (int)stream.ReceiveNext();
+            AssignSeating(tempID, ghostPlayerViewID0, ghostSeat0.transform);
+            ghostPlayerViewID0 = tempID;
 
-            if (tempRightPlayerViewID != 0 && tempRightPlayerViewID != rightPlayerViewID)
-            {
+            tempID = (int)stream.ReceiveNext();
+            AssignSeating(tempID, ghostPlayerViewID1, ghostSeat1.transform);
+            ghostPlayerViewID1 = tempID;
 
-                PhotonView rightPlayerPhotonView = PhotonView.Find(tempRightPlayerViewID);
-                if (rightPlayerPhotonView != null && rightPlayerPhotonView.IsMine)
-                {
-                    XROrigin xROrigin = FindObjectOfType<XROrigin>();
-                    SitDown(xROrigin.transform, rightSeat.transform);
-                }
+            tempID = (int)stream.ReceiveNext();
+            AssignSeating(tempID, ghostPlayerViewID2, ghostSeat2.transform);
+            ghostPlayerViewID2 = tempID;
 
-                GameObject rightPlayer = rightPlayerPhotonView?.gameObject;
-                if (rightPlayer != null)
-                {
-                    SitDown(rightPlayer.transform, rightSeat.transform);
-                }
+            tempID = (int)stream.ReceiveNext();
+            AssignSeating(tempID, ghostPlayerViewID3, ghostSeat3.transform);
+            ghostPlayerViewID3 = tempID;
 
-            }
-            rightPlayerViewID = tempRightPlayerViewID;
-
-
-
-            int ghostCount = (int)stream.ReceiveNext();
-            ghostPlayerViewIDs.Clear();
-            for (int i = 0; i < ghostCount; i++)
-            {
-                int viewID = (int)stream.ReceiveNext();
-                ghostPlayerViewIDs.Add(viewID);
-            }
+            tempID = (int)stream.ReceiveNext();
+            AssignSeating(tempID, ghostPlayerViewID4, ghostSeat4.transform);
+            ghostPlayerViewID4 = tempID;
 
 
 
             seatsUpdated = true;
         }
     }
+
+    private void AssignSeating(int tempID, int playerID, Transform seat)
+    {
+        PhotonView tempView;
+        GameObject tempPlayer;
+
+        if (tempID != 0 && tempID != playerID)
+        {
+            tempView = PhotonView.Find(tempID);
+            if (tempView != null && tempView.IsMine)
+            {
+                XROrigin xROrigin = FindObjectOfType<XROrigin>();
+                SitDown(xROrigin.transform, seat);
+            }
+
+            tempPlayer = tempView?.gameObject;
+            if (tempPlayer != null)
+            {
+                SitDown(tempPlayer.transform, seat);
+            }
+        }
+    }
+
 
     private IEnumerator WaitForPhotonView(int viewID, Transform targetSeat, float timeout = 2f)
     {
@@ -130,7 +147,7 @@ public class SeatManager : MonoBehaviourPunCallbacks, IPunObservable
         player.transform.localRotation = Quaternion.identity;
     }
 
-    // TODO everytime player leaves, update seat status
+
     [PunRPC]
     public void SeatSpawnedPlayer(int viewID)
     {
@@ -141,32 +158,40 @@ public class SeatManager : MonoBehaviourPunCallbacks, IPunObservable
 
             if (leftPlayerViewID == 0)
             {
-                if (networkedPhotonView.IsMine)
-                {
-                    XROrigin xROrigin = FindObjectOfType<XROrigin>();
-                    SitDown(xROrigin.transform, leftSeat.transform);
-                }
-                SitDown(networkedPlayer.transform, leftSeat.transform);
+                AssignSeating(viewID, leftPlayerViewID, leftSeat.transform);
                 leftPlayerViewID = viewID;
             }
-            else if (rightPlayerViewID == 0) 
+            else if (rightPlayerViewID == 0)
             {
-                if (networkedPhotonView.IsMine)
-                {
-                    XROrigin xROrigin = FindObjectOfType<XROrigin>();
-                    SitDown(xROrigin.transform, rightSeat.transform);
-                }
-                SitDown(networkedPlayer.transform, rightSeat.transform);
+                AssignSeating(viewID, rightPlayerViewID, rightSeat.transform);
                 rightPlayerViewID = viewID;
             }
-            else
+            else if (ghostPlayerViewID0 == 0)
             {
-                // impossible for Masterclient to end up spawning into ghost seat
-                if (networkedPhotonView.IsMine)
-                {    
-                }
-                SitDown(networkedPlayer.transform, ghostSeat.transform);
-                ghostPlayerViewIDs.Add(viewID);
+                AssignSeating(viewID, ghostPlayerViewID0, ghostSeat0.transform);
+                ghostPlayerViewID0 = viewID;
+            }
+            else if (ghostPlayerViewID1 == 0)
+            {
+                AssignSeating(viewID, ghostPlayerViewID1, ghostSeat1.transform);
+                ghostPlayerViewID1 = viewID;
+
+            }
+            else if (ghostPlayerViewID2 == 0)
+            {
+                AssignSeating(viewID, ghostPlayerViewID2, ghostSeat2.transform);
+                ghostPlayerViewID2 = viewID;
+
+            }
+            else if (ghostPlayerViewID3 == 0)
+            {
+                AssignSeating(viewID, ghostPlayerViewID3, ghostSeat3.transform);
+                ghostPlayerViewID3 = viewID;
+            }
+            else if (ghostPlayerViewID4 == 0)
+            {
+                AssignSeating(viewID, ghostPlayerViewID4, ghostSeat4.transform);
+                ghostPlayerViewID4 = viewID;
             }
         }
     }
@@ -185,17 +210,31 @@ public class SeatManager : MonoBehaviourPunCallbacks, IPunObservable
             rightPlayerViewID = 0;
         }
 
-        // Update the ghost seats
-        for (int i = ghostPlayerViewIDs.Count - 1; i >= 0; i--)
+        if (ghostSeat0.transform.childCount == 0)
         {
-            int viewID = ghostPlayerViewIDs[i];
-            PhotonView ghostPlayerView = PhotonView.Find(viewID);
-            if (ghostPlayerView == null || ghostPlayerView.transform.parent != ghostSeat.transform)
-            {
-                ghostPlayerViewIDs.RemoveAt(i);
-                Debug.Log($"Removed ghost player with ViewID {viewID} from ghost seats.");
-            }
+            ghostPlayerViewID0 = 0;
         }
+
+        if (ghostSeat1.transform.childCount == 0)
+        {
+            ghostPlayerViewID1 = 0;
+        }
+
+        if (ghostSeat2.transform.childCount == 0)
+        {
+            ghostPlayerViewID2 = 0;
+        }
+
+        if (ghostSeat3.transform.childCount == 0)
+        {
+            ghostPlayerViewID3 = 0;
+        }
+
+        if (ghostSeat4.transform.childCount == 0)
+        {
+            ghostPlayerViewID4 = 0;
+        }
+
     }
 
 
