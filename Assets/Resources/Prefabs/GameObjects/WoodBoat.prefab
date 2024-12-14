@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3875898837516774934}
+  - component: {fileID: 3211368054003852869}
   m_Layer: 0
   m_Name: Right Seat
   m_TagString: Untagged
@@ -31,6 +32,19 @@ Transform:
   m_Father: {fileID: 805013536887770149}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3211368054003852869
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 609982606364689696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d8b8327c0918094981c3c9ba5695b9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  seatManager: {fileID: 7148805562778945990}
 --- !u!1 &803740269738942118
 GameObject:
   m_ObjectHideFlags: 0
@@ -40,6 +54,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6363073619477479731}
+  - component: {fileID: 2667935864578027727}
   m_Layer: 0
   m_Name: Ghost Seat
   m_TagString: Untagged
@@ -62,6 +77,19 @@ Transform:
   m_Father: {fileID: 805013536887770149}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2667935864578027727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 803740269738942118}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d8b8327c0918094981c3c9ba5695b9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  seatManager: {fileID: 7148805562778945990}
 --- !u!1 &2818298389583375952
 GameObject:
   m_ObjectHideFlags: 0
@@ -683,6 +711,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4986088462311695029}
+  - component: {fileID: 6502083502182535623}
   m_Layer: 0
   m_Name: Left Seat
   m_TagString: Untagged
@@ -705,6 +734,19 @@ Transform:
   m_Father: {fileID: 805013536887770149}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6502083502182535623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3962340131509179810}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d8b8327c0918094981c3c9ba5695b9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  seatManager: {fileID: 7148805562778945990}
 --- !u!1 &5177135473761355893
 GameObject:
   m_ObjectHideFlags: 0
@@ -1496,6 +1538,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 805013536887770149}
+  - component: {fileID: 925414006880617203}
+  - component: {fileID: 7148805562778945990}
   m_Layer: 0
   m_Name: Seats
   m_TagString: Untagged
@@ -1521,6 +1565,48 @@ Transform:
   m_Father: {fileID: 7476816626250338024}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &925414006880617203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7994600756287242023}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 0
+  ObservedComponents:
+  - {fileID: 7148805562778945990}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &7148805562778945990
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7994600756287242023}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a102a0fe17696f4f82383d5547a855b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftSeat: {fileID: 3962340131509179810}
+  leftPlayerViewID: 0
+  rightSeat: {fileID: 609982606364689696}
+  rightPlayerViewID: 0
+  ghostSeat: {fileID: 803740269738942118}
+  ghostPlayerViewIDs: 
+  seatsUpdated: 0
 --- !u!1 &8177598751720376474
 GameObject:
   m_ObjectHideFlags: 0

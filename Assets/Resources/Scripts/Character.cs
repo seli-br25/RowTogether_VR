@@ -9,8 +9,7 @@ using ExitGames.Client.Photon;
 using Photon.Realtime;
 using System.Collections;
 
-// MonoBehaviourPunCallbacks is absolutely required for making RPC calls ...
-public class Character : MonoBehaviourPunCallbacks
+public class Character : MonoBehaviourPun
 {
     public Transform cameraOffset;
     public Transform head;

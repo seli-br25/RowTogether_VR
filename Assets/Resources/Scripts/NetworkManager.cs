@@ -77,18 +77,18 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         Debug.Log("MasterClient switched!");
         base.OnMasterClientSwitched(newMasterClient);
-        if (PhotonNetwork.IsMasterClient)
-        {
-            int prevMasterClientActorNr = (int)PhotonNetwork.CurrentRoom.CustomProperties["MasterClientActorNumber"];
-            GameObject boat = PhotonView.Find((int)PhotonNetwork.CurrentRoom.CustomProperties["ShipID"])?.gameObject;
+        //if (PhotonNetwork.IsMasterClient)
+        //{
+        //    int prevMasterClientActorNr = (int)PhotonNetwork.CurrentRoom.CustomProperties["MasterClientActorNumber"];
+        //    GameObject boat = PhotonView.Find((int)PhotonNetwork.CurrentRoom.CustomProperties["ShipID"])?.gameObject;
 
-            boat.GetComponent<BoatManager>().UpdateSeatStatus(prevMasterClientActorNr);
+        //    boat.GetComponent<BoatNetworkManager>().UpdateSeatStatus(prevMasterClientActorNr);
 
 
-            Hashtable updatedProperties = new Hashtable();
-            updatedProperties["MasterClientActorNumber"] = PhotonNetwork.MasterClient.ActorNumber;
-            PhotonNetwork.CurrentRoom.SetCustomProperties(updatedProperties);
-        }
+        //    Hashtable updatedProperties = new Hashtable();
+        //    updatedProperties["MasterClientActorNumber"] = PhotonNetwork.MasterClient.ActorNumber;
+        //    PhotonNetwork.CurrentRoom.SetCustomProperties(updatedProperties);
+        //}
 
     }
 
