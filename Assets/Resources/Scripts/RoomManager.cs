@@ -80,7 +80,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         {
             Debug.Log("Trying to create room.");
             RoomOptions roomOps = new RoomOptions();
-            roomOps.MaxPlayers = 6;
+            roomOps.MaxPlayers = 7;
             roomOps.IsVisible = true;
             roomOps.IsOpen = true;
             roomOps.EmptyRoomTtl = 0;

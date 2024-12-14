@@ -31,11 +31,19 @@ Listed are sources we used and every chatGPT prompt associated with Assignment3
 
 # Notes regarding implementation of Tasks
 
-- Boat setup : 
+	- 
+
+- Boat setup : <br>
 	- The boat is a networked scene object initialized and controlled only by the master client. Having its own photon view, it syncs all child objects in relation to the boats movement, which is inherent to unity's parent/child hirarchy
 	- All networked players with their view transform will, onJoinRoom, become a child of that boat, both in local game as well as in remote instances \(through rpc calls\)
 	- Networked players local transforms will be synched, resulting in robust and absolute correct synch of players in every local and remote instance, when moving the boat. Meaning no rubber banding \(checkout issue described under Character.cs MapPosition() function\) regardless of master or non master client.
 	- The boat can only be controlled by the master client and is also properly synced considereing water waves, etc...
+
+- Seat setup : <br>
+	- On room join the boat will be synced and networked players spawned.
+	- the boat has photonview for seats, which syncs the current occupied or empty seats
+	- only master client assigns seat, so when a new player joins the room, and their networked player spawned, an rpc call to master will signal master to assign the new player a seat.
+	- when the seat is assigned by master and gets synced to all, all photonviews and their gameobjects will be moved to their respective seat if not already sitting there (including new players own xrorigin and networked player)
 
 - Paddle sync : <br>
 	- Due to how the boat is setup, paddles are also a child of the boat, allowing them to easily move along the boat with 0 network issues.
@@ -109,3 +117,11 @@ Listed are sources we used and every chatGPT prompt associated with Assignment3
 - fixed goal sync
 	- applied implementations considering various edgeaces for masterclient siwtch, late join or in room game over triggers.
 - added support for grabbing paddle out of hand of other player
+
+14.12.24
+- refactored networked spawner
+	- previously seat update, availability and seating was all fetched on join and applied by local player, which could lead to potential concurrency issues
+	- information for seating was fetched via room options, which had somewhat big delay on initialization and fetching
+	- new system uses photon view and IpunObservable
+	- for changes see above note regarding seat setup
+	- ghost observers now implemented 
