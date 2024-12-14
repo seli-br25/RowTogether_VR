@@ -19,6 +19,11 @@ TagManager:
   - Obstacle
   - HeartItem
   - SpeedTrap
+  - Ghost Seat 0
+  - Ghost Seat 1
+  - Ghost Seat 2
+  - Ghost Seat 3
+  - Ghost Seat 4
   layers:
   - Default
   - TransparentFX

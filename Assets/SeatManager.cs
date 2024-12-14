@@ -4,6 +4,8 @@ using UnityEngine;
 using Photon.Pun;
 using Unity.XR.CoreUtils;
 using Photon.Realtime;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class SeatManager : MonoBehaviourPunCallbacks, IPunObservable
 {
@@ -29,6 +31,8 @@ public class SeatManager : MonoBehaviourPunCallbacks, IPunObservable
     [SerializeField]
     private GameObject ghostSeat4;
     public int ghostPlayerViewID4 = 0;
+
+    private PhotonView myPhotonView;
 
     public bool seatsUpdated = false;
 
@@ -62,16 +66,18 @@ public class SeatManager : MonoBehaviourPunCallbacks, IPunObservable
         else if (stream.IsReading)
         {
             int tempID;
-
+            // left seat
             tempID = (int)stream.ReceiveNext();
             AssignSeating(tempID, leftPlayerViewID, leftSeat.transform);
             leftPlayerViewID = tempID;
 
+
+            // right seat
             tempID = (int)stream.ReceiveNext();
             AssignSeating(tempID, rightPlayerViewID, rightSeat.transform);
             rightPlayerViewID = tempID;
 
-
+            // ghost seats
             tempID = (int)stream.ReceiveNext();
             AssignSeating(tempID, ghostPlayerViewID0, ghostSeat0.transform);
             ghostPlayerViewID0 = tempID;
@@ -105,11 +111,15 @@ public class SeatManager : MonoBehaviourPunCallbacks, IPunObservable
 
         if (tempID != 0 && tempID != playerID)
         {
+
+            seat.gameObject.GetComponentInChildren<Button>().gameObject.SetActive(false);
+
             tempView = PhotonView.Find(tempID);
             if (tempView != null && tempView.IsMine)
             {
                 XROrigin xROrigin = FindObjectOfType<XROrigin>();
                 SitDown(xROrigin.transform, seat);
+                myPhotonView = tempView;
             }
 
             tempPlayer = tempView?.gameObject;
@@ -117,6 +127,10 @@ public class SeatManager : MonoBehaviourPunCallbacks, IPunObservable
             {
                 SitDown(tempPlayer.transform, seat);
             }
+
+        } else if (tempID == 0)
+        {
+            seat.gameObject.GetComponentInChildren<Button>(true).gameObject.SetActive(true);
         }
     }
 
@@ -146,20 +160,68 @@ public class SeatManager : MonoBehaviourPunCallbacks, IPunObservable
         player.transform.localPosition = Vector3.zero;
         player.transform.localRotation = Quaternion.identity;
     }
+    
 
+    // only seat if the tags are matching and the seat is empty, which it should anyways because player should not be able to request occupied seats
+
+    [PunRPC]
+    public void ReqestSeatTransfer(int viewID, string seatTag)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            if (seatTag != null && viewID != 0)
+            {
+                if (seatTag == leftSeat.tag && leftPlayerViewID == 0)
+                {
+                    AssignSeating(viewID, leftPlayerViewID, leftSeat.transform);
+                    leftPlayerViewID = viewID;
+                }
+                else if (seatTag == rightSeat.tag && rightPlayerViewID == 0)
+                {
+                    AssignSeating(viewID, rightPlayerViewID, rightSeat.transform);
+                    rightPlayerViewID = viewID;
+                }
+                else if (seatTag == ghostSeat0.tag && ghostPlayerViewID0 == 0)
+                {
+                    AssignSeating(viewID, ghostPlayerViewID0, ghostSeat0.transform);
+                    ghostPlayerViewID0 = viewID;
+                }
+                else if (seatTag == ghostSeat1.tag && ghostPlayerViewID1 == 0)
+                {
+                    AssignSeating(viewID, ghostPlayerViewID1, ghostSeat1.transform);
+                    ghostPlayerViewID1 = viewID;
+                }
+                else if (seatTag == ghostSeat2.tag && ghostPlayerViewID2 == 0)
+                {
+                    AssignSeating(viewID, ghostPlayerViewID2, ghostSeat2.transform);
+                    ghostPlayerViewID2 = viewID;
+                }
+                else if (seatTag == ghostSeat3.tag && ghostPlayerViewID3 == 0)
+                {
+                    AssignSeating(viewID, ghostPlayerViewID3, ghostSeat3.transform);
+                    ghostPlayerViewID3 = viewID;
+                }
+                else if (seatTag == ghostSeat4.tag && ghostPlayerViewID4 == 0)
+                {
+                    AssignSeating(viewID, ghostPlayerViewID4, ghostSeat4.transform);
+                    ghostPlayerViewID4 = viewID;
+                }
+
+            }
+        }
+    }
 
     [PunRPC]
     public void SeatSpawnedPlayer(int viewID)
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            PhotonView networkedPhotonView = PhotonView.Find(viewID);
-            GameObject networkedPlayer = networkedPhotonView?.gameObject;
 
             if (leftPlayerViewID == 0)
             {
                 AssignSeating(viewID, leftPlayerViewID, leftSeat.transform);
                 leftPlayerViewID = viewID;
+
             }
             else if (rightPlayerViewID == 0)
             {
@@ -200,44 +262,57 @@ public class SeatManager : MonoBehaviourPunCallbacks, IPunObservable
     public void UpdateSeatStatus()
     {
 
-        if (leftSeat.transform.childCount == 0)
+        if (leftSeat.transform.childCount == 1)
         {
             leftPlayerViewID = 0;
+            leftSeat.GetComponentInChildren<Button>(true).gameObject.SetActive(true);
         }
 
-        if (rightSeat.transform.childCount == 0)
+        if (rightSeat.transform.childCount == 1)
         {
             rightPlayerViewID = 0;
+            rightSeat.GetComponentInChildren<Button>(true).gameObject.SetActive(true);
         }
 
-        if (ghostSeat0.transform.childCount == 0)
+        if (ghostSeat0.transform.childCount == 1)
         {
             ghostPlayerViewID0 = 0;
+            ghostSeat0.GetComponentInChildren<Button>(true).gameObject.SetActive(true);
         }
 
-        if (ghostSeat1.transform.childCount == 0)
+        if (ghostSeat1.transform.childCount == 1)
         {
             ghostPlayerViewID1 = 0;
+            ghostSeat1.GetComponentInChildren<Button>(true).gameObject.SetActive(true);
         }
 
-        if (ghostSeat2.transform.childCount == 0)
+        if (ghostSeat2.transform.childCount == 1)
         {
             ghostPlayerViewID2 = 0;
+            ghostSeat2.GetComponentInChildren<Button>(true).gameObject.SetActive(true);
         }
 
-        if (ghostSeat3.transform.childCount == 0)
+        if (ghostSeat3.transform.childCount == 1)
         {
             ghostPlayerViewID3 = 0;
+            ghostSeat3.GetComponentInChildren<Button>(true).gameObject.SetActive(true);
         }
 
-        if (ghostSeat4.transform.childCount == 0)
+        if (ghostSeat4.transform.childCount == 1)
         {
             ghostPlayerViewID4 = 0;
+            ghostSeat4.GetComponentInChildren<Button>(true).gameObject.SetActive(true);
         }
 
     }
 
-
+    public void OnButtonClick(GameObject buttonPressInvokedParent)
+    {
+        if (buttonPressInvokedParent != null)
+        {
+            photonView.RPC("ReqestSeatTransfer", RpcTarget.MasterClient, myPhotonView.ViewID, buttonPressInvokedParent.tag);
+        }
+    }
 
 
 }

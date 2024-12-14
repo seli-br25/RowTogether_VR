@@ -4384,8 +4384,8 @@ MonoBehaviour:
   m_SetLineColorGradient: 1
   m_ValidColorGradient:
     serializedVersion: 2
-    key0: {r: 0.9622642, g: 0.8962343, b: 0.077162705, a: 1}
-    key1: {r: 0.9628191, g: 0.8977602, b: 0.09073384, a: 1}
+    key0: {r: 0.07843139, g: 0.9337573, b: 0.9607843, a: 1}
+    key1: {r: 0.15172589, g: 0.09019605, b: 0.9647059, a: 1}
     key2: {r: 1, g: 1, b: 1, a: 0}
     key3: {r: 0, g: 0, b: 0, a: 0}
     key4: {r: 0, g: 0, b: 0, a: 0}
