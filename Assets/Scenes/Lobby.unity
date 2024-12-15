@@ -4511,7 +4511,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 984117f1ad26bec4eb7ce6706c86d882, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.813
+  m_Volume: 0.652
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -9689,6 +9689,7 @@ MonoBehaviour:
   floater2: {fileID: 2818298389502888214}
   floater3: {fileID: 2818298390313938437}
   floater4: {fileID: 2818298390205517149}
+  audioManager: {fileID: 0}
 --- !u!1 &803740268332335082
 GameObject:
   m_ObjectHideFlags: 0
