@@ -480,6 +480,7 @@ MonoBehaviour:
   isLeftPaddle: 1
   enableLog: 1
   soundEffectManager: {fileID: 6842464655030906116}
+  initialTransform: {fileID: 3398012988015239613}
 --- !u!114 &1209581885574110532
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -800,7 +801,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 0.58
+  m_Volume: 0.4
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -1362,6 +1363,7 @@ MonoBehaviour:
   isLeftPaddle: 0
   enableLog: 1
   soundEffectManager: {fileID: 7941790467801576882}
+  initialTransform: {fileID: 2893248839365938228}
 --- !u!114 &7154697234764750755
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2380,7 +2382,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.4
   m_Pitch: 1
   Loop: 0
   Mute: 0

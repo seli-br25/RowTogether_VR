@@ -34,12 +34,14 @@ public class PaddleBoatController : MonoBehaviourPun, IPunOwnershipCallbacks
     public PaddleAudioManager soundEffectManager;
     private Vector3 preWaterVelocitySoundDecider;
 
+    public Transform initialTransform;
+
     // Start is called before the first frame update
     void Start()
     {
 
-        initialLocalPosition = transform.localPosition;
-        initialLocalRotation = transform.localRotation;
+        initialLocalPosition = initialTransform.localPosition;
+        initialLocalRotation = initialTransform.localRotation;
         lastPosition = Vector3.zero;
 
         boatCollider = boat.GetComponent<Collider>();
