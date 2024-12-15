@@ -1622,6 +1622,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6598815579406187026, guid: 18ddb545287c546e19cc77dc9fbb2189, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6598815579406187027, guid: 18ddb545287c546e19cc77dc9fbb2189, type: 3}
       propertyPath: m_RootOrder
       value: 12
@@ -10773,7 +10777,7 @@ MonoBehaviour:
   isLeftPaddle: 0
   enableLog: 1
   soundEffectManager: {fileID: 7941790467051623678}
-  initialTransform: {fileID: 0}
+  initialTransform: {fileID: 2893248840652074360}
 --- !u!1 &3592438719293313624
 GameObject:
   m_ObjectHideFlags: 0
@@ -12389,7 +12393,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7476816627127956356}
   m_LocalRotation: {x: -0, y: -0.8899994, z: -0, w: 0.45596176}
-  m_LocalPosition: {x: 4.81, y: 0.34, z: 1.1992143}
+  m_LocalPosition: {x: 5.342, y: 0.34, z: 1.1992143}
   m_LocalScale: {x: 1.2, y: 1.2, z: 1.2}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -12519,7 +12523,7 @@ MonoBehaviour:
   isLeftPaddle: 1
   enableLog: 1
   soundEffectManager: {fileID: 6842464654164167752}
-  initialTransform: {fileID: 0}
+  initialTransform: {fileID: 3398012989278290161}
 --- !u!4 &7529227310069893599
 Transform:
   m_ObjectHideFlags: 0
