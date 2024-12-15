@@ -4,14 +4,12 @@ using System.Collections.Generic;
 
 public class PaddleAudioManager : MonoBehaviour
 {
-    public AudioSource audioSource;          // The single AudioSource
-    public List<AudioClip> weak;       // List of all available audio clips
+    public AudioSource audioSource;
+    public List<AudioClip> weak;
     public List<AudioClip> strong;
-    public bool allowSoundOverwrite = false; // If true, allows interrupting the currently playing sound
+    public bool allowSoundOverwrite = false;
 
-    private bool isPlaying = false; // Flag to track if a sound is playing
-
-    // Function to play an audio clip by name
+    private bool isPlaying = false;
 
 
     public void PlayRandomAudio(int clips)
@@ -52,9 +50,6 @@ public class PaddleAudioManager : MonoBehaviour
             audioSource.Stop();
         }
         StartCoroutine(PlayClip(randomClip));
-
-        //audioSource.clip = randomClip;
-        //audioSource.Play();
 
     }
 

@@ -41,6 +41,9 @@ public class GameplayManager : MonoBehaviour
     private bool goalReached = false;
     private Rigidbody body;
 
+
+    public BoatAudioManager audioManager;
+
     private void Start()
     {
         photonView = GetComponent<PhotonView>();
@@ -154,6 +157,8 @@ public class GameplayManager : MonoBehaviour
 
     public void LoseLife()
     {
+        audioManager.PlayBoatCrack();
+
         lives--;
         UpdateLivesUI();
 
