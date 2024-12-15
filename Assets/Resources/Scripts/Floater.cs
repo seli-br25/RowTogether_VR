@@ -11,10 +11,11 @@ public class Floater : MonoBehaviour
     public int floaterCount = 4;
     public float waterDrag = 0.99f;
     public float waterAngularDrag = 0.5f;
+    public bool bypass = false;
 
     private void FixedUpdate()
     {
-        if (PhotonNetwork.IsMasterClient)
+        if (PhotonNetwork.IsMasterClient || bypass)
         {
             rigidBody.AddForceAtPosition(Physics.gravity / floaterCount, transform.position, ForceMode.Acceleration);
 
