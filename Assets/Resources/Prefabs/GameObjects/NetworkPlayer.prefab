@@ -63,6 +63,7 @@ GameObject:
   - component: {fileID: 8812042211046567743}
   - component: {fileID: 388217249182557825}
   - component: {fileID: 3336109127299129992}
+  - component: {fileID: 5065897042244951417}
   m_Layer: 0
   m_Name: NetworkPlayer
   m_TagString: Untagged
@@ -159,6 +160,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 126494ae2a10a34499272ed97a6c9f5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5065897042244951417
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2733493425514693845}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b562c090f17b4eb78b01df093def8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  local: 0
+  playerHeadMaterial: {fileID: 2100000, guid: 21b14e0d27c46304585fe336da35c720, type: 2}
+  ghostHeadMaterial: {fileID: 2100000, guid: 3f01b92cca64d6f48879a74c908d6e5d, type: 2}
+  headRender: {fileID: 1007501553239717863}
+  playerHandMaterial: {fileID: 2100000, guid: 27107a0eb5e27c644a6b50271b542884, type: 2}
+  ghostHandMaterial: {fileID: 2100000, guid: 4d04b657c56c9e446b1f0fc0d4bb86ce, type: 2}
+  leftHandRenderer: {fileID: 4626670914880108125}
+  rightHandRenderer: {fileID: 1084246704438895068}
 --- !u!1 &2906994021501586464
 GameObject:
   m_ObjectHideFlags: 0
@@ -524,12 +545,21 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 03867fdec86ce4fd6b0200cda5c08a92, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 21b14e0d27c46304585fe336da35c720, type: 2}
     - target: {fileID: 919132149155446097, guid: 03867fdec86ce4fd6b0200cda5c08a92, type: 3}
       propertyPath: m_Name
       value: VR_simple
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 03867fdec86ce4fd6b0200cda5c08a92, type: 3}
+--- !u!23 &1007501553239717863 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 03867fdec86ce4fd6b0200cda5c08a92, type: 3}
+  m_PrefabInstance: {fileID: 1890043938784635747}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2139334685008727176 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 03867fdec86ce4fd6b0200cda5c08a92, type: 3}
@@ -550,6 +580,10 @@ PrefabInstance:
       propertyPath: photonView
       value: 
       objectReference: {fileID: 5178368203732038974}
+    - target: {fileID: 109434732392105323, guid: 65847589f926b734d9eaed6e25f0046b, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 27107a0eb5e27c644a6b50271b542884, type: 2}
     - target: {fileID: 109434732395284509, guid: 65847589f926b734d9eaed6e25f0046b, type: 3}
       propertyPath: m_Name
       value: Left Hand Model
@@ -604,6 +638,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 65847589f926b734d9eaed6e25f0046b, type: 3}
+--- !u!137 &4626670914880108125 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 109434732392105323, guid: 65847589f926b734d9eaed6e25f0046b, type: 3}
+  m_PrefabInstance: {fileID: 4733836126221841206}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4626670914893277003 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 109434732395451517, guid: 65847589f926b734d9eaed6e25f0046b, type: 3}
@@ -701,6 +740,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Right Hand Model
       objectReference: {fileID: 0}
+    - target: {fileID: 5686134208196863108, guid: 1fd3a7c43c8190f4d8c167ebde694364, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 27107a0eb5e27c644a6b50271b542884, type: 2}
     - target: {fileID: 7261417013007679807, guid: 1fd3a7c43c8190f4d8c167ebde694364, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -741,6 +784,11 @@ MonoBehaviour:
   m_SynchronizeLayers:
   - SynchronizeType: 2
     LayerIndex: 0
+--- !u!137 &1084246704438895068 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 5686134208196863108, guid: 1fd3a7c43c8190f4d8c167ebde694364, type: 3}
+  m_PrefabInstance: {fileID: 4748254491721237848}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5451003626470174224
 PrefabInstance:
   m_ObjectHideFlags: 0

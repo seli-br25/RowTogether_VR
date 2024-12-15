@@ -15,7 +15,7 @@ public class StartSignal : MonoBehaviour
     void Start()
     {
         if (barrier == null)
-        {
+        {  
             Debug.LogError("Null pointer on barrier");
         }
     }

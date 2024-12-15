@@ -35,6 +35,9 @@ public class Character : MonoBehaviourPun
 
     private Button restartButton;
 
+
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -59,6 +62,9 @@ public class Character : MonoBehaviourPun
     }
 
 
+
+
+    // Obsolete
     [PunRPC]
     private void SeatedAsChild(int seatNr, int boatViewId, int playerViewId)
     {
@@ -154,41 +160,6 @@ public class Character : MonoBehaviourPun
         }
     }
 
-
-    [PunRPC]
-    private void HandleFinish(string playerName)
-    {
-        placementCounter++; 
-        Debug.Log(playerName + " has finished in position " + placementCounter);
-
-        if (photonView.IsMine)
-        {
-            ShowPlacementMessage(placementCounter); 
-        }
-
-        if (placementCounter == PhotonNetwork.CurrentRoom.PlayerCount)
-        {
-            restartButton.gameObject.SetActive(true);
-        }
-    }
-
-    private void ShowPlacementMessage(int placement)
-    {
-        if (placementText != null)
-        {
-            if (placement == 1)
-            {
-                placementText.text = "Congratulation, you won!";
-            } else
-            {
-                placementText.text = "You are " + placement + ".!";
-            }  
-        }
-        else
-        {
-            Debug.LogError("PlacementText is not assigned!");
-        }
-    }
 
     private void OnRestartButtonClicked()
     {

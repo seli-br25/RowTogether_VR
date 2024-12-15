@@ -68,34 +68,34 @@ public class SeatManager : MonoBehaviourPunCallbacks, IPunObservable
             int tempID;
             // left seat
             tempID = (int)stream.ReceiveNext();
-            AssignSeating(tempID, leftPlayerViewID, leftSeat.transform);
+            AssignSeating(tempID, leftPlayerViewID, leftSeat.transform, 1);
             leftPlayerViewID = tempID;
 
 
             // right seat
             tempID = (int)stream.ReceiveNext();
-            AssignSeating(tempID, rightPlayerViewID, rightSeat.transform);
+            AssignSeating(tempID, rightPlayerViewID, rightSeat.transform, 1);
             rightPlayerViewID = tempID;
 
             // ghost seats
             tempID = (int)stream.ReceiveNext();
-            AssignSeating(tempID, ghostPlayerViewID0, ghostSeat0.transform);
+            AssignSeating(tempID, ghostPlayerViewID0, ghostSeat0.transform, 0);
             ghostPlayerViewID0 = tempID;
 
             tempID = (int)stream.ReceiveNext();
-            AssignSeating(tempID, ghostPlayerViewID1, ghostSeat1.transform);
+            AssignSeating(tempID, ghostPlayerViewID1, ghostSeat1.transform, 0);
             ghostPlayerViewID1 = tempID;
 
             tempID = (int)stream.ReceiveNext();
-            AssignSeating(tempID, ghostPlayerViewID2, ghostSeat2.transform);
+            AssignSeating(tempID, ghostPlayerViewID2, ghostSeat2.transform, 0);
             ghostPlayerViewID2 = tempID;
 
             tempID = (int)stream.ReceiveNext();
-            AssignSeating(tempID, ghostPlayerViewID3, ghostSeat3.transform);
+            AssignSeating(tempID, ghostPlayerViewID3, ghostSeat3.transform, 0);
             ghostPlayerViewID3 = tempID;
 
             tempID = (int)stream.ReceiveNext();
-            AssignSeating(tempID, ghostPlayerViewID4, ghostSeat4.transform);
+            AssignSeating(tempID, ghostPlayerViewID4, ghostSeat4.transform, 0);
             ghostPlayerViewID4 = tempID;
 
 
@@ -104,7 +104,7 @@ public class SeatManager : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
-    private void AssignSeating(int tempID, int playerID, Transform seat)
+    private void AssignSeating(int tempID, int playerID, Transform seat, int playerGhost)
     {
         PhotonView tempView;
         GameObject tempPlayer;
@@ -119,6 +119,16 @@ public class SeatManager : MonoBehaviourPunCallbacks, IPunObservable
             {
                 XROrigin xROrigin = FindObjectOfType<XROrigin>();
                 SitDown(xROrigin.transform, seat);
+                if (playerGhost == 0)
+                {
+                    xROrigin.GetComponent<PlayerGhostVisualizer>().SetGhost();
+                }
+                else if (playerGhost == 1)
+                {
+                    xROrigin.GetComponent<PlayerGhostVisualizer>().SetPlayer();
+                }
+
+
                 myPhotonView = tempView;
             }
 
@@ -128,6 +138,16 @@ public class SeatManager : MonoBehaviourPunCallbacks, IPunObservable
                 SitDown(tempPlayer.transform, seat);
             }
 
+            if (playerGhost == 0)
+            {
+                tempPlayer.GetComponent<PlayerGhostVisualizer>().SetGhost();
+            }
+            else if (playerGhost == 1)
+            {
+                tempPlayer.GetComponent<PlayerGhostVisualizer>().SetPlayer();
+            }
+            
+
         } else if (tempID == 0)
         {
             seat.gameObject.GetComponentInChildren<Button>(true).gameObject.SetActive(true);
@@ -135,24 +155,6 @@ public class SeatManager : MonoBehaviourPunCallbacks, IPunObservable
     }
 
 
-    private IEnumerator WaitForPhotonView(int viewID, Transform targetSeat, float timeout = 2f)
-    {
-        GameObject player = null;
-        float elapsedTime = 0f;
-
-        while (player == null && elapsedTime < timeout)
-        {
-            PhotonView photonView = PhotonView.Find(viewID);
-            if (photonView != null)
-            {
-                player = photonView.gameObject;
-                SitDown(player.transform, targetSeat);
-                yield break; // Exit the coroutine once the player is seated
-            }
-            elapsedTime += Time.deltaTime;
-            yield return null; // Wait for the next frame
-        }
-    }
 
     private void SitDown(Transform player, Transform parent)
     {
@@ -173,37 +175,37 @@ public class SeatManager : MonoBehaviourPunCallbacks, IPunObservable
             {
                 if (seatTag == leftSeat.tag && leftPlayerViewID == 0)
                 {
-                    AssignSeating(viewID, leftPlayerViewID, leftSeat.transform);
+                    AssignSeating(viewID, leftPlayerViewID, leftSeat.transform, 1);
                     leftPlayerViewID = viewID;
                 }
                 else if (seatTag == rightSeat.tag && rightPlayerViewID == 0)
                 {
-                    AssignSeating(viewID, rightPlayerViewID, rightSeat.transform);
+                    AssignSeating(viewID, rightPlayerViewID, rightSeat.transform, 1);
                     rightPlayerViewID = viewID;
                 }
                 else if (seatTag == ghostSeat0.tag && ghostPlayerViewID0 == 0)
                 {
-                    AssignSeating(viewID, ghostPlayerViewID0, ghostSeat0.transform);
+                    AssignSeating(viewID, ghostPlayerViewID0, ghostSeat0.transform, 0);
                     ghostPlayerViewID0 = viewID;
                 }
                 else if (seatTag == ghostSeat1.tag && ghostPlayerViewID1 == 0)
                 {
-                    AssignSeating(viewID, ghostPlayerViewID1, ghostSeat1.transform);
+                    AssignSeating(viewID, ghostPlayerViewID1, ghostSeat1.transform, 0);
                     ghostPlayerViewID1 = viewID;
                 }
                 else if (seatTag == ghostSeat2.tag && ghostPlayerViewID2 == 0)
                 {
-                    AssignSeating(viewID, ghostPlayerViewID2, ghostSeat2.transform);
+                    AssignSeating(viewID, ghostPlayerViewID2, ghostSeat2.transform, 0);
                     ghostPlayerViewID2 = viewID;
                 }
                 else if (seatTag == ghostSeat3.tag && ghostPlayerViewID3 == 0)
                 {
-                    AssignSeating(viewID, ghostPlayerViewID3, ghostSeat3.transform);
+                    AssignSeating(viewID, ghostPlayerViewID3, ghostSeat3.transform, 0);
                     ghostPlayerViewID3 = viewID;
                 }
                 else if (seatTag == ghostSeat4.tag && ghostPlayerViewID4 == 0)
                 {
-                    AssignSeating(viewID, ghostPlayerViewID4, ghostSeat4.transform);
+                    AssignSeating(viewID, ghostPlayerViewID4, ghostSeat4.transform, 0);
                     ghostPlayerViewID4 = viewID;
                 }
 
@@ -219,40 +221,40 @@ public class SeatManager : MonoBehaviourPunCallbacks, IPunObservable
 
             if (leftPlayerViewID == 0)
             {
-                AssignSeating(viewID, leftPlayerViewID, leftSeat.transform);
+                AssignSeating(viewID, leftPlayerViewID, leftSeat.transform, 1);
                 leftPlayerViewID = viewID;
 
             }
             else if (rightPlayerViewID == 0)
             {
-                AssignSeating(viewID, rightPlayerViewID, rightSeat.transform);
+                AssignSeating(viewID, rightPlayerViewID, rightSeat.transform, 1);
                 rightPlayerViewID = viewID;
             }
             else if (ghostPlayerViewID0 == 0)
             {
-                AssignSeating(viewID, ghostPlayerViewID0, ghostSeat0.transform);
+                AssignSeating(viewID, ghostPlayerViewID0, ghostSeat0.transform, 0);
                 ghostPlayerViewID0 = viewID;
             }
             else if (ghostPlayerViewID1 == 0)
             {
-                AssignSeating(viewID, ghostPlayerViewID1, ghostSeat1.transform);
+                AssignSeating(viewID, ghostPlayerViewID1, ghostSeat1.transform, 0);
                 ghostPlayerViewID1 = viewID;
 
             }
             else if (ghostPlayerViewID2 == 0)
             {
-                AssignSeating(viewID, ghostPlayerViewID2, ghostSeat2.transform);
+                AssignSeating(viewID, ghostPlayerViewID2, ghostSeat2.transform, 0);
                 ghostPlayerViewID2 = viewID;
 
             }
             else if (ghostPlayerViewID3 == 0)
             {
-                AssignSeating(viewID, ghostPlayerViewID3, ghostSeat3.transform);
+                AssignSeating(viewID, ghostPlayerViewID3, ghostSeat3.transform, 0);
                 ghostPlayerViewID3 = viewID;
             }
             else if (ghostPlayerViewID4 == 0)
             {
-                AssignSeating(viewID, ghostPlayerViewID4, ghostSeat4.transform);
+                AssignSeating(viewID, ghostPlayerViewID4, ghostSeat4.transform, 0);
                 ghostPlayerViewID4 = viewID;
             }
         }
