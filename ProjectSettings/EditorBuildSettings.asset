@@ -14,7 +14,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/Dev Scenes/Exercise3.unity
     guid: ef048b485fb99e84b9e5ad6e81e899fc
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Lobby.unity
     guid: f6342b8b6effa974b88961dfd27344cd
   - enabled: 0

@@ -899,7 +899,7 @@ MonoBehaviour:
   strong:
   - {fileID: 8300000, guid: 561192521aeba8d4cbfd8875d8ee5762, type: 3}
   - {fileID: 8300000, guid: e8fae8199275d594794ad452f1454a23, type: 3}
-  allowSoundOverwrite: 0
+  allowSoundOverwrite: 1
 --- !u!1 &3962340131509179810
 GameObject:
   m_ObjectHideFlags: 0
@@ -2297,7 +2297,7 @@ MonoBehaviour:
   strong:
   - {fileID: 8300000, guid: 561192521aeba8d4cbfd8875d8ee5762, type: 3}
   - {fileID: 8300000, guid: e8fae8199275d594794ad452f1454a23, type: 3}
-  allowSoundOverwrite: 0
+  allowSoundOverwrite: 1
 --- !u!1001 &320457720956279872
 PrefabInstance:
   m_ObjectHideFlags: 0

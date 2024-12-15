@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: TreeGreen2Mat
-  m_Shader: {fileID: 10511, guid: 0000000000000000f000000000000000, type: 0}
+  m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -71,7 +71,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _AO: 2.66
-    - _BaseLight: 0.798
+    - _BaseLight: 0.681
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
