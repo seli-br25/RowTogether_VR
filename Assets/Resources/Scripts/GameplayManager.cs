@@ -130,11 +130,10 @@ public class GameplayManager : MonoBehaviour
             }
             else if (other.CompareTag("SpeedTrap"))
             {
-                // TODO check speed slowdown
-                paddleControllerLeft.SetForceMultiplier(1f);
-                paddleControllerRight.SetForceMultiplier(1f);
-                paddleControllerLeft.SetTorqueMultiplier(6f);
-                paddleControllerRight.SetTorqueMultiplier(6f);
+                paddleControllerLeft.SetForceMultiplier(0.6f);
+                paddleControllerRight.SetForceMultiplier(0.6f);
+                paddleControllerLeft.SetTorqueMultiplier(5f);
+                paddleControllerRight.SetTorqueMultiplier(5f);
             }
             else if (other.CompareTag("Goal"))
             {
