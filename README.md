@@ -34,8 +34,6 @@ Listed are sources we used and every chatGPT prompt associated with Assignment3
 
 # Notes regarding implementation of Tasks
 
-	- 
-
 - Boat setup : <br>
 	- The boat is a networked scene object initialized and controlled only by the master client. Having its own photon view, it syncs all child objects in relation to the boats movement, which is inherent to unity's parent/child hirarchy
 	- All networked players with their view transform will, onJoinRoom, become a child of that boat, both in local game as well as in remote instances \(through rpc calls\)
